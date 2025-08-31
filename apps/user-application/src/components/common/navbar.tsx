@@ -1,0 +1,101 @@
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { UserAvatarTrigger } from "@/components/auth/user-avatar-trigger";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { Menu } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+
+export function Navbar() {
+  const nav = useNavigate();
+  const navItems = [
+    {
+      label: "Auth Setup",
+      link: () =>
+        nav({
+          to: "/auth",
+        }),
+    },
+    {
+      label: "Auth Client",
+      link: () =>
+        nav({
+          to: "/auth/client",
+        }),
+    },
+    {
+      label: "Database",
+      link: () =>
+        nav({
+          to: "/database",
+        }),
+    },
+  ];
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
+      <div className="bg-background/80 backdrop-blur-md border rounded-full px-6 py-2 shadow-lg">
+        <div className="flex items-center justify-between gap-4">
+          {/* Left side - User Avatar */}
+          <UserAvatarTrigger />
+
+          {/* Center - Logo/Title */}
+          <Link to="/" className="flex items-center">
+            <span className="font-semibold text-foreground">Your App</span>
+          </Link>
+
+          {/* Right side - Hamburger menu */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-80">
+              <SheetHeader className="pb-6">
+                <SheetTitle>Menu</SheetTitle>
+              </SheetHeader>
+
+              <div className="space-y-6">
+                {/* Navigation Links */}
+                <div className="space-y-1">
+                  <h3 className="px-3 text-sm font-medium text-muted-foreground mb-3">
+                    Navigation
+                  </h3>
+                  {navItems.map((item) => (
+                    <Button
+                      key={item.label}
+                      variant="ghost"
+                      className="w-full justify-start h-10 px-3"
+                      onClick={item.link}
+                    >
+                      {item.label}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Theme Settings */}
+                <div className="space-y-3 border-t pt-6">
+                  <h3 className="px-3 text-sm font-medium text-muted-foreground">
+                    Settings
+                  </h3>
+                  <div className="px-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Theme</span>
+                      <ThemeToggle />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </div>
+  );
+}
