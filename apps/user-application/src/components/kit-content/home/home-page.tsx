@@ -3,6 +3,7 @@ import { MonorepoSection } from "./monorepo-section";
 import { DatabaseSection } from "./database-section";
 import { AuthSection } from "./auth-section";
 import { PaymentsSection } from "./payments-section";
+import { CourseSection } from "./course-section";
 
 export function HomePage() {
   return (
@@ -12,6 +13,7 @@ export function HomePage() {
       <DatabaseSection />
       <AuthSection />
       <PaymentsSection />
+      <CourseSection />
     </>
   );
 }
