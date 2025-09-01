@@ -3,12 +3,12 @@
 // export dynamically through wrangler, or we can potentially let users directly
 // add them as a sort of "plugin" system.
 
-import ENTRY, { __INTERNAL_WRANGLER_MIDDLEWARE__ } from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-pLBkbO/middleware-insertion-facade.js";
+import ENTRY, { __INTERNAL_WRANGLER_MIDDLEWARE__ } from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-Lv6wWz/middleware-insertion-facade.js";
 import { __facade_invoke__, __facade_register__, Dispatcher } from "/Users/matthewsessions/workspace/backpine/saas-kit/node_modules/.pnpm/wrangler@4.33.1_@cloudflare+workers-types@4.20250823.0/node_modules/wrangler/templates/middleware/common.ts";
-import type { WorkerEntrypointConstructor } from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-pLBkbO/middleware-insertion-facade.js";
+import type { WorkerEntrypointConstructor } from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-Lv6wWz/middleware-insertion-facade.js";
 
 // Preserve all the exports from the worker
-export * from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-pLBkbO/middleware-insertion-facade.js";
+export * from "/Users/matthewsessions/workspace/backpine/saas-kit/apps/user-application/.wrangler/tmp/bundle-Lv6wWz/middleware-insertion-facade.js";
 
 class __Facade_ScheduledController__ implements ScheduledController {
 	readonly #noRetry: ScheduledController["noRetry"];

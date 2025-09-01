@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-cf-vite-test-v2",
+  "name": "saas-kit",
   "compatibility_date": "2025-08-13",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
@@ -8,14 +8,4 @@
   "observability": {
     "enabled": true,
   },
-  "vars": {
-    "TEST": "VALUE",
-  },
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_id": "2b24afcb-b0c4-4820-8a6e-22712638f57a",
-      "experimental_remote": true,
-    },
-  ],
 }
