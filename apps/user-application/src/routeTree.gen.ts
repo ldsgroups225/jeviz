@@ -18,10 +18,11 @@ import { Route as StaticDatabaseRouteImport } from './routes/_static/database'
 import { Route as StaticAuthIndexRouteImport } from './routes/_static/auth/index'
 import { Route as AuthedAppIndexRouteImport } from './routes/_authed/app/index'
 import { Route as StaticAuthClientRouteImport } from './routes/_static/auth/client'
-import { Route as AuthedAppUserRouteImport } from './routes/_authed/app/user'
-import { Route as AuthedAppPaymentLinksRouteImport } from './routes/_authed/app/payment-links'
-import { Route as AuthedAppPolarCheckoutSuccessRouteImport } from './routes/_authed/app/polar-checkout.success'
+import { Route as AuthedAppPolarSubscriptionsRouteImport } from './routes/_authed/app/polar/subscriptions'
+import { Route as AuthedAppPolarCheckoutSuccessRouteImport } from './routes/_authed/app/polar/checkout.success'
+import { ServerRoute as ApiWebhookPolarServerRouteImport } from './routes/api/webhook/polar'
 import { ServerRoute as ApiAuthSplatServerRouteImport } from './routes/api/auth.$'
+import { ServerRoute as AuthedAppPolarPortalServerRouteImport } from './routes/_authed/app/polar/portal'
 
 const rootServerRouteImport = createServerRootRoute()
 
@@ -58,47 +59,52 @@ const StaticAuthClientRoute = StaticAuthClientRouteImport.update({
   path: '/auth/client',
   getParentRoute: () => StaticRouteRoute,
 } as any)
-const AuthedAppUserRoute = AuthedAppUserRouteImport.update({
-  id: '/app/user',
-  path: '/app/user',
-  getParentRoute: () => AuthedRouteRoute,
-} as any)
-const AuthedAppPaymentLinksRoute = AuthedAppPaymentLinksRouteImport.update({
-  id: '/app/payment-links',
-  path: '/app/payment-links',
-  getParentRoute: () => AuthedRouteRoute,
-} as any)
-const AuthedAppPolarCheckoutSuccessRoute =
-  AuthedAppPolarCheckoutSuccessRouteImport.update({
-    id: '/app/polar-checkout/success',
-    path: '/app/polar-checkout/success',
+const AuthedAppPolarSubscriptionsRoute =
+  AuthedAppPolarSubscriptionsRouteImport.update({
+    id: '/app/polar/subscriptions',
+    path: '/app/polar/subscriptions',
     getParentRoute: () => AuthedRouteRoute,
   } as any)
+const AuthedAppPolarCheckoutSuccessRoute =
+  AuthedAppPolarCheckoutSuccessRouteImport.update({
+    id: '/app/polar/checkout/success',
+    path: '/app/polar/checkout/success',
+    getParentRoute: () => AuthedRouteRoute,
+  } as any)
+const ApiWebhookPolarServerRoute = ApiWebhookPolarServerRouteImport.update({
+  id: '/api/webhook/polar',
+  path: '/api/webhook/polar',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 const ApiAuthSplatServerRoute = ApiAuthSplatServerRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootServerRouteImport,
 } as any)
+const AuthedAppPolarPortalServerRoute =
+  AuthedAppPolarPortalServerRouteImport.update({
+    id: '/_authed/app/polar/portal',
+    path: '/app/polar/portal',
+    getParentRoute: () => rootServerRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/database': typeof StaticDatabaseRoute
   '/': typeof StaticIndexRoute
-  '/app/payment-links': typeof AuthedAppPaymentLinksRoute
-  '/app/user': typeof AuthedAppUserRoute
   '/auth/client': typeof StaticAuthClientRoute
   '/app': typeof AuthedAppIndexRoute
   '/auth': typeof StaticAuthIndexRoute
-  '/app/polar-checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
+  '/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
+  '/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
 export interface FileRoutesByTo {
   '/database': typeof StaticDatabaseRoute
   '/': typeof StaticIndexRoute
-  '/app/payment-links': typeof AuthedAppPaymentLinksRoute
-  '/app/user': typeof AuthedAppUserRoute
   '/auth/client': typeof StaticAuthClientRoute
   '/app': typeof AuthedAppIndexRoute
   '/auth': typeof StaticAuthIndexRoute
-  '/app/polar-checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
+  '/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
+  '/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,46 +112,42 @@ export interface FileRoutesById {
   '/_static': typeof StaticRouteRouteWithChildren
   '/_static/database': typeof StaticDatabaseRoute
   '/_static/': typeof StaticIndexRoute
-  '/_authed/app/payment-links': typeof AuthedAppPaymentLinksRoute
-  '/_authed/app/user': typeof AuthedAppUserRoute
   '/_static/auth/client': typeof StaticAuthClientRoute
   '/_authed/app/': typeof AuthedAppIndexRoute
   '/_static/auth/': typeof StaticAuthIndexRoute
-  '/_authed/app/polar-checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
+  '/_authed/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
+  '/_authed/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/database'
     | '/'
-    | '/app/payment-links'
-    | '/app/user'
     | '/auth/client'
     | '/app'
     | '/auth'
-    | '/app/polar-checkout/success'
+    | '/app/polar/subscriptions'
+    | '/app/polar/checkout/success'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/database'
     | '/'
-    | '/app/payment-links'
-    | '/app/user'
     | '/auth/client'
     | '/app'
     | '/auth'
-    | '/app/polar-checkout/success'
+    | '/app/polar/subscriptions'
+    | '/app/polar/checkout/success'
   id:
     | '__root__'
     | '/_authed'
     | '/_static'
     | '/_static/database'
     | '/_static/'
-    | '/_authed/app/payment-links'
-    | '/_authed/app/user'
     | '/_static/auth/client'
     | '/_authed/app/'
     | '/_static/auth/'
-    | '/_authed/app/polar-checkout/success'
+    | '/_authed/app/polar/subscriptions'
+    | '/_authed/app/polar/checkout/success'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -154,24 +156,36 @@ export interface RootRouteChildren {
 }
 export interface FileServerRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/webhook/polar': typeof ApiWebhookPolarServerRoute
+  '/app/polar/portal': typeof AuthedAppPolarPortalServerRoute
 }
 export interface FileServerRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/webhook/polar': typeof ApiWebhookPolarServerRoute
+  '/app/polar/portal': typeof AuthedAppPolarPortalServerRoute
 }
 export interface FileServerRoutesById {
   __root__: typeof rootServerRouteImport
   '/api/auth/$': typeof ApiAuthSplatServerRoute
+  '/api/webhook/polar': typeof ApiWebhookPolarServerRoute
+  '/_authed/app/polar/portal': typeof AuthedAppPolarPortalServerRoute
 }
 export interface FileServerRouteTypes {
   fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths: '/api/auth/$'
+  fullPaths: '/api/auth/$' | '/api/webhook/polar' | '/app/polar/portal'
   fileServerRoutesByTo: FileServerRoutesByTo
-  to: '/api/auth/$'
-  id: '__root__' | '/api/auth/$'
+  to: '/api/auth/$' | '/api/webhook/polar' | '/app/polar/portal'
+  id:
+    | '__root__'
+    | '/api/auth/$'
+    | '/api/webhook/polar'
+    | '/_authed/app/polar/portal'
   fileServerRoutesById: FileServerRoutesById
 }
 export interface RootServerRouteChildren {
   ApiAuthSplatServerRoute: typeof ApiAuthSplatServerRoute
+  ApiWebhookPolarServerRoute: typeof ApiWebhookPolarServerRoute
+  AuthedAppPolarPortalServerRoute: typeof AuthedAppPolarPortalServerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -225,24 +239,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaticAuthClientRouteImport
       parentRoute: typeof StaticRouteRoute
     }
-    '/_authed/app/user': {
-      id: '/_authed/app/user'
-      path: '/app/user'
-      fullPath: '/app/user'
-      preLoaderRoute: typeof AuthedAppUserRouteImport
+    '/_authed/app/polar/subscriptions': {
+      id: '/_authed/app/polar/subscriptions'
+      path: '/app/polar/subscriptions'
+      fullPath: '/app/polar/subscriptions'
+      preLoaderRoute: typeof AuthedAppPolarSubscriptionsRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
-    '/_authed/app/payment-links': {
-      id: '/_authed/app/payment-links'
-      path: '/app/payment-links'
-      fullPath: '/app/payment-links'
-      preLoaderRoute: typeof AuthedAppPaymentLinksRouteImport
-      parentRoute: typeof AuthedRouteRoute
-    }
-    '/_authed/app/polar-checkout/success': {
-      id: '/_authed/app/polar-checkout/success'
-      path: '/app/polar-checkout/success'
-      fullPath: '/app/polar-checkout/success'
+    '/_authed/app/polar/checkout/success': {
+      id: '/_authed/app/polar/checkout/success'
+      path: '/app/polar/checkout/success'
+      fullPath: '/app/polar/checkout/success'
       preLoaderRoute: typeof AuthedAppPolarCheckoutSuccessRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
@@ -250,6 +257,13 @@ declare module '@tanstack/react-router' {
 }
 declare module '@tanstack/react-start/server' {
   interface ServerFileRoutesByPath {
+    '/api/webhook/polar': {
+      id: '/api/webhook/polar'
+      path: '/api/webhook/polar'
+      fullPath: '/api/webhook/polar'
+      preLoaderRoute: typeof ApiWebhookPolarServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -257,20 +271,25 @@ declare module '@tanstack/react-start/server' {
       preLoaderRoute: typeof ApiAuthSplatServerRouteImport
       parentRoute: typeof rootServerRouteImport
     }
+    '/_authed/app/polar/portal': {
+      id: '/_authed/app/polar/portal'
+      path: '/app/polar/portal'
+      fullPath: '/app/polar/portal'
+      preLoaderRoute: typeof AuthedAppPolarPortalServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
   }
 }
 
 interface AuthedRouteRouteChildren {
-  AuthedAppPaymentLinksRoute: typeof AuthedAppPaymentLinksRoute
-  AuthedAppUserRoute: typeof AuthedAppUserRoute
   AuthedAppIndexRoute: typeof AuthedAppIndexRoute
+  AuthedAppPolarSubscriptionsRoute: typeof AuthedAppPolarSubscriptionsRoute
   AuthedAppPolarCheckoutSuccessRoute: typeof AuthedAppPolarCheckoutSuccessRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
-  AuthedAppPaymentLinksRoute: AuthedAppPaymentLinksRoute,
-  AuthedAppUserRoute: AuthedAppUserRoute,
   AuthedAppIndexRoute: AuthedAppIndexRoute,
+  AuthedAppPolarSubscriptionsRoute: AuthedAppPolarSubscriptionsRoute,
   AuthedAppPolarCheckoutSuccessRoute: AuthedAppPolarCheckoutSuccessRoute,
 }
 
@@ -305,6 +324,8 @@ export const routeTree = rootRouteImport
   ._addFileTypes<FileRouteTypes>()
 const rootServerRouteChildren: RootServerRouteChildren = {
   ApiAuthSplatServerRoute: ApiAuthSplatServerRoute,
+  ApiWebhookPolarServerRoute: ApiWebhookPolarServerRoute,
+  AuthedAppPolarPortalServerRoute: AuthedAppPolarPortalServerRoute,
 }
 export const serverRouteTree = rootServerRouteImport
   ._addFileChildren(rootServerRouteChildren)

@@ -9,7 +9,7 @@ const searchSchema = z.object({
   checkout_id: z.string(),
 });
 
-export const Route = createFileRoute("/_authed/app/polar-checkout/success")({
+export const Route = createFileRoute("/_authed/app/polar/checkout/success")({
   component: RouteComponent,
   validateSearch: (search) => searchSchema.parse(search),
   beforeLoad: async ({ search }) => {
@@ -143,7 +143,7 @@ function RouteComponent() {
                 Try Again
               </Button>
               <Button
-                onClick={() => nav({ to: "/app/payment-links" })}
+                onClick={() => nav({ to: "/app/polar/subscriptions" })}
                 size="lg"
                 className="px-6"
               >

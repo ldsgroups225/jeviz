@@ -1,23 +1,30 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { authClient } from "@/components/auth/client";
-import {
-  Home,
-  Users,
-  BarChart3,
-  Settings,
-  FileText,
-} from "lucide-react";
-
-const sidebarItems = [
-  { name: "Dashboard", icon: Home, href: "/app", current: true },
-  { name: "Users", icon: Users, href: "/app/users", current: false },
-  { name: "Analytics", icon: BarChart3, href: "/app/analytics", current: false },
-  { name: "Reports", icon: FileText, href: "/app/reports", current: false },
-  { name: "Settings", icon: Settings, href: "/app/settings", current: false },
-];
+import { Home, CircleDollarSign } from "lucide-react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 export function Sidebar() {
   const session = authClient.useSession();
+  const nav = useNavigate();
+  const routerState = useRouterState();
+  const currentPath = routerState.location.pathname;
+
+  const sidebarItems = [
+    {
+      name: "Dashboard",
+      icon: Home,
+      path: "/app",
+      exact: true,
+      goto: () => nav({ to: "/app" }),
+    },
+    {
+      name: "Polar Subscriptions",
+      icon: CircleDollarSign,
+      path: "/app/polar",
+      exact: false,
+      goto: () => nav({ to: "/app/polar/subscriptions" }),
+    },
+  ];
 
   return (
     <div className="hidden md:flex md:w-64 md:flex-col">
@@ -27,25 +34,33 @@ export function Sidebar() {
         </div>
         <div className="mt-5 flex-grow flex flex-col">
           <nav className="flex-1 px-2 space-y-1">
-            {sidebarItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className={`${
-                  item.current
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground hover:bg-accent hover:text-accent-foreground"
-                } group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors`}
-              >
-                <item.icon
+            {sidebarItems.map((item) => {
+              const isCurrent = item.exact
+                ? currentPath === item.path
+                : currentPath.startsWith(item.path);
+
+              return (
+                <a
+                  key={item.name}
+                  onClick={item.goto}
                   className={`${
-                    item.current ? "text-primary-foreground" : "text-muted-foreground"
-                  } mr-3 flex-shrink-0 h-5 w-5`}
-                  aria-hidden="true"
-                />
-                {item.name}
-              </a>
-            ))}
+                    isCurrent
+                      ? "bg-primary text-primary-foreground"
+                      : "text-foreground hover:bg-accent hover:text-accent-foreground"
+                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer`}
+                >
+                  <item.icon
+                    className={`${
+                      isCurrent
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground"
+                    } mr-3 flex-shrink-0 h-5 w-5`}
+                    aria-hidden="true"
+                  />
+                  {item.name}
+                </a>
+              );
+            })}
           </nav>
         </div>
         <div className="flex-shrink-0 flex border-t border-border p-4">

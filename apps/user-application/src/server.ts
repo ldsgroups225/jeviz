@@ -12,9 +12,9 @@ const fetch = createStartHandler({
 })(defaultStreamHandler);
 
 export default {
-  fetch: async (request: Request, env: Env) => {
+  fetch: (request: Request, env: Env) => {
     const db = initDatabase(env.DB);
-
+    console.log("fetch", Date.now());
     setAuth({
       socialProviders: {
         google: {

@@ -1,5 +1,6 @@
 import { getDb } from "@/database/setup";
 import { subscriptions } from "@/drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export async function updateSubscription(data: {
   userId: string;
@@ -36,4 +37,13 @@ export async function updateSubscription(data: {
         productId: data.productId,
       },
     });
+}
+
+export async function getSubscription(userId: string) {
+  const db = getDb();
+  const subscription = await db
+    .select()
+    .from(subscriptions)
+    .where(eq(subscriptions.userId, userId));
+  return subscription;
 }

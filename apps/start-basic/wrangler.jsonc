@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-cf-vite-test-v2",
+  "name": "tanstack-cf-vite-test-v4",
   "compatibility_date": "2025-08-13",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
