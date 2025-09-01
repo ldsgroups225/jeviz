@@ -9,7 +9,15 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ["fsevents"],
   },
-
+  environments: {
+    ssr: {
+      build: {
+        rollupOptions: {
+          preserveEntrySignatures: "strict",
+        },
+      },
+    },
+  },
   server: {
     port: 3000,
     allowedHosts: ["ef54240d0784.ngrok-free.app"],

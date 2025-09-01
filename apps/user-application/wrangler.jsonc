@@ -4,9 +4,7 @@
   "compatibility_date": "2025-08-13",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
-  "assets": {
-    "directory": "dist/client",
-  },
+
   "observability": {
     "enabled": true,
   },

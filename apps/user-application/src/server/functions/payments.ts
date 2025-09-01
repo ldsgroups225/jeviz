@@ -1,45 +1,31 @@
-import { Polar } from "@polar-sh/sdk";
-import { createMiddleware, createServerFn } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
 import { getRequestIP } from "@tanstack/react-start/server";
 import {
   updateSubscription,
   getSubscription,
 } from "@repo/data-ops/queries/polar";
 import { z } from "zod";
-import { protectedFunctionMiddleware } from "../middleware/auth";
+import { protectedFunctionMiddleware } from "@/server/middleware/auth";
+import { polarMiddleware } from "@/server/middleware/polar";
 
 const PaymentLink = z.object({
   productId: z.string(),
 });
 
-export const polarMiddleware = createMiddleware({
-  type: "function",
-}).server(async ({ next }) => {
-  const polar = new Polar({
-    accessToken: "polar_oat_GpE7e4VWmLFSAhJkGP7hg83qx4m2FIaLUaMA04TNnoE",
-    server: "sandbox",
+export const baseFunction = createServerFn().middleware([
+  protectedFunctionMiddleware,
+  polarMiddleware,
+]);
+
+export const getProducts = baseFunction.handler(async (ctx) => {
+  const products = await ctx.context.polar.products.list({
+    isArchived: false,
   });
-  return next({
-    context: {
-      polar,
-    },
-  });
+
+  return products.result.items;
 });
-export const getProducts = createServerFn({
-  method: "GET",
-})
-  .middleware([protectedFunctionMiddleware, polarMiddleware])
-  .handler(async (ctx) => {
-    console.log("getProducts", Date.now());
-    const products = await ctx.context.polar.products.list({
-      isArchived: false,
-    });
 
-    return products.result.items;
-  });
-
-export const createPaymentLink = createServerFn()
-  .middleware([protectedFunctionMiddleware, polarMiddleware])
+export const createPaymentLink = baseFunction
   .validator((data: z.infer<typeof PaymentLink>) => {
     return PaymentLink.parse(data);
   })
@@ -55,8 +41,7 @@ export const createPaymentLink = createServerFn()
     return checkout;
   });
 
-export const validPayment = createServerFn()
-  .middleware([protectedFunctionMiddleware, polarMiddleware])
+export const validPayment = baseFunction
   .validator((data: string) => {
     console.log("validatePayment", data);
     if (typeof data !== "string") {
@@ -75,36 +60,32 @@ export const validPayment = createServerFn()
     return false;
   });
 
-export const collectSubscription = createServerFn()
-  .middleware([protectedFunctionMiddleware, polarMiddleware])
-  .handler(async (ctx) => {
-    const subscription = await ctx.context.polar.subscriptions.list({
-      externalCustomerId: ctx.context.userId,
-    });
-    if (subscription.result.items.length === 0) {
-      return null;
-    }
-    const subscriptionItem = subscription.result.items[0];
-    await updateSubscription({
-      userId: ctx.context.userId,
-      subscriptionId: subscriptionItem.id,
-      productId: subscriptionItem.productId,
-      status: subscriptionItem.status,
-      startedAt: subscriptionItem.startedAt?.toISOString(),
-      currentPeriodStart: subscriptionItem.currentPeriodStart?.toISOString(),
-      currentPeriodEnd: subscriptionItem.currentPeriodEnd?.toISOString(),
-      cancelAtPeriodEnd: subscriptionItem.cancelAtPeriodEnd,
-    });
-    console.log("collectSubscription", subscriptionItem);
-    return subscriptionItem;
+export const collectSubscription = baseFunction.handler(async (ctx) => {
+  const subscription = await ctx.context.polar.subscriptions.list({
+    externalCustomerId: ctx.context.userId,
   });
+  if (subscription.result.items.length === 0) {
+    return null;
+  }
+  const subscriptionItem = subscription.result.items[0];
+  await updateSubscription({
+    userId: ctx.context.userId,
+    subscriptionId: subscriptionItem.id,
+    productId: subscriptionItem.productId,
+    status: subscriptionItem.status,
+    startedAt: subscriptionItem.startedAt?.toISOString(),
+    currentPeriodStart: subscriptionItem.currentPeriodStart?.toISOString(),
+    currentPeriodEnd: subscriptionItem.currentPeriodEnd?.toISOString(),
+    cancelAtPeriodEnd: subscriptionItem.cancelAtPeriodEnd,
+  });
+  console.log("collectSubscription", subscriptionItem);
+  return subscriptionItem;
+});
 
-export const getUserSubscription = createServerFn()
-  .middleware([protectedFunctionMiddleware])
-  .handler(async (ctx) => {
-    const subscription = await getSubscription(ctx.context.userId);
-    if (subscription.length === 0) {
-      return null;
-    }
-    return subscription[0];
-  });
+export const getUserSubscription = baseFunction.handler(async (ctx) => {
+  const subscription = await getSubscription(ctx.context.userId);
+  if (subscription.length === 0) {
+    return null;
+  }
+  return subscription[0];
+});

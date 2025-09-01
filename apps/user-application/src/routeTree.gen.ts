@@ -14,9 +14,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as StaticRouteRouteImport } from './routes/_static/route'
 import { Route as AuthedRouteRouteImport } from './routes/_authed/route'
 import { Route as StaticIndexRouteImport } from './routes/_static/index'
-import { Route as StaticDatabaseRouteImport } from './routes/_static/database'
+import { Route as StaticDatabaseIndexRouteImport } from './routes/_static/database/index'
 import { Route as StaticAuthIndexRouteImport } from './routes/_static/auth/index'
 import { Route as AuthedAppIndexRouteImport } from './routes/_authed/app/index'
+import { Route as StaticDatabaseQueriesRouteImport } from './routes/_static/database/queries'
 import { Route as StaticAuthClientRouteImport } from './routes/_static/auth/client'
 import { Route as AuthedAppPolarSubscriptionsRouteImport } from './routes/_authed/app/polar/subscriptions'
 import { Route as AuthedAppPolarCheckoutSuccessRouteImport } from './routes/_authed/app/polar/checkout.success'
@@ -39,9 +40,9 @@ const StaticIndexRoute = StaticIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StaticRouteRoute,
 } as any)
-const StaticDatabaseRoute = StaticDatabaseRouteImport.update({
-  id: '/database',
-  path: '/database',
+const StaticDatabaseIndexRoute = StaticDatabaseIndexRouteImport.update({
+  id: '/database/',
+  path: '/database/',
   getParentRoute: () => StaticRouteRoute,
 } as any)
 const StaticAuthIndexRoute = StaticAuthIndexRouteImport.update({
@@ -53,6 +54,11 @@ const AuthedAppIndexRoute = AuthedAppIndexRouteImport.update({
   id: '/app/',
   path: '/app/',
   getParentRoute: () => AuthedRouteRoute,
+} as any)
+const StaticDatabaseQueriesRoute = StaticDatabaseQueriesRouteImport.update({
+  id: '/database/queries',
+  path: '/database/queries',
+  getParentRoute: () => StaticRouteRoute,
 } as any)
 const StaticAuthClientRoute = StaticAuthClientRouteImport.update({
   id: '/auth/client',
@@ -89,20 +95,22 @@ const AuthedAppPolarPortalServerRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
-  '/database': typeof StaticDatabaseRoute
   '/': typeof StaticIndexRoute
   '/auth/client': typeof StaticAuthClientRoute
+  '/database/queries': typeof StaticDatabaseQueriesRoute
   '/app': typeof AuthedAppIndexRoute
   '/auth': typeof StaticAuthIndexRoute
+  '/database': typeof StaticDatabaseIndexRoute
   '/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
   '/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
 export interface FileRoutesByTo {
-  '/database': typeof StaticDatabaseRoute
   '/': typeof StaticIndexRoute
   '/auth/client': typeof StaticAuthClientRoute
+  '/database/queries': typeof StaticDatabaseQueriesRoute
   '/app': typeof AuthedAppIndexRoute
   '/auth': typeof StaticAuthIndexRoute
+  '/database': typeof StaticDatabaseIndexRoute
   '/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
   '/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
@@ -110,42 +118,46 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authed': typeof AuthedRouteRouteWithChildren
   '/_static': typeof StaticRouteRouteWithChildren
-  '/_static/database': typeof StaticDatabaseRoute
   '/_static/': typeof StaticIndexRoute
   '/_static/auth/client': typeof StaticAuthClientRoute
+  '/_static/database/queries': typeof StaticDatabaseQueriesRoute
   '/_authed/app/': typeof AuthedAppIndexRoute
   '/_static/auth/': typeof StaticAuthIndexRoute
+  '/_static/database/': typeof StaticDatabaseIndexRoute
   '/_authed/app/polar/subscriptions': typeof AuthedAppPolarSubscriptionsRoute
   '/_authed/app/polar/checkout/success': typeof AuthedAppPolarCheckoutSuccessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/database'
     | '/'
     | '/auth/client'
+    | '/database/queries'
     | '/app'
     | '/auth'
+    | '/database'
     | '/app/polar/subscriptions'
     | '/app/polar/checkout/success'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/database'
     | '/'
     | '/auth/client'
+    | '/database/queries'
     | '/app'
     | '/auth'
+    | '/database'
     | '/app/polar/subscriptions'
     | '/app/polar/checkout/success'
   id:
     | '__root__'
     | '/_authed'
     | '/_static'
-    | '/_static/database'
     | '/_static/'
     | '/_static/auth/client'
+    | '/_static/database/queries'
     | '/_authed/app/'
     | '/_static/auth/'
+    | '/_static/database/'
     | '/_authed/app/polar/subscriptions'
     | '/_authed/app/polar/checkout/success'
   fileRoutesById: FileRoutesById
@@ -211,11 +223,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaticIndexRouteImport
       parentRoute: typeof StaticRouteRoute
     }
-    '/_static/database': {
-      id: '/_static/database'
+    '/_static/database/': {
+      id: '/_static/database/'
       path: '/database'
       fullPath: '/database'
-      preLoaderRoute: typeof StaticDatabaseRouteImport
+      preLoaderRoute: typeof StaticDatabaseIndexRouteImport
       parentRoute: typeof StaticRouteRoute
     }
     '/_static/auth/': {
@@ -231,6 +243,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app'
       preLoaderRoute: typeof AuthedAppIndexRouteImport
       parentRoute: typeof AuthedRouteRoute
+    }
+    '/_static/database/queries': {
+      id: '/_static/database/queries'
+      path: '/database/queries'
+      fullPath: '/database/queries'
+      preLoaderRoute: typeof StaticDatabaseQueriesRouteImport
+      parentRoute: typeof StaticRouteRoute
     }
     '/_static/auth/client': {
       id: '/_static/auth/client'
@@ -298,17 +317,19 @@ const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(
 )
 
 interface StaticRouteRouteChildren {
-  StaticDatabaseRoute: typeof StaticDatabaseRoute
   StaticIndexRoute: typeof StaticIndexRoute
   StaticAuthClientRoute: typeof StaticAuthClientRoute
+  StaticDatabaseQueriesRoute: typeof StaticDatabaseQueriesRoute
   StaticAuthIndexRoute: typeof StaticAuthIndexRoute
+  StaticDatabaseIndexRoute: typeof StaticDatabaseIndexRoute
 }
 
 const StaticRouteRouteChildren: StaticRouteRouteChildren = {
-  StaticDatabaseRoute: StaticDatabaseRoute,
   StaticIndexRoute: StaticIndexRoute,
   StaticAuthClientRoute: StaticAuthClientRoute,
+  StaticDatabaseQueriesRoute: StaticDatabaseQueriesRoute,
   StaticAuthIndexRoute: StaticAuthIndexRoute,
+  StaticDatabaseIndexRoute: StaticDatabaseIndexRoute,
 }
 
 const StaticRouteRouteWithChildren = StaticRouteRoute._addFileChildren(

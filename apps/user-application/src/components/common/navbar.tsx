@@ -13,27 +13,44 @@ import { Link, useNavigate } from "@tanstack/react-router";
 
 export function Navbar() {
   const nav = useNavigate();
-  const navItems = [
+  const navSections = [
     {
-      label: "Auth Setup",
-      link: () =>
-        nav({
-          to: "/auth",
-        }),
+      title: "Database",
+      items: [
+        {
+          label: "Setup",
+          link: () =>
+            nav({
+              to: "/database",
+            }),
+        },
+        {
+          label: "Queries",
+          link: () =>
+            nav({
+              to: "/database/queries",
+            }),
+        },
+      ],
     },
     {
-      label: "Auth Client",
-      link: () =>
-        nav({
-          to: "/auth/client",
-        }),
-    },
-    {
-      label: "Database",
-      link: () =>
-        nav({
-          to: "/database",
-        }),
+      title: "Auth",
+      items: [
+        {
+          label: "Setup",
+          link: () =>
+            nav({
+              to: "/auth",
+            }),
+        },
+        {
+          label: "Client",
+          link: () =>
+            nav({
+              to: "/auth/client",
+            }),
+        },
+      ],
     },
   ];
 
@@ -63,19 +80,23 @@ export function Navbar() {
 
               <div className="space-y-6">
                 {/* Navigation Links */}
-                <div className="space-y-1">
-                  <h3 className="px-3 text-sm font-medium text-muted-foreground mb-3">
-                    Navigation
-                  </h3>
-                  {navItems.map((item) => (
-                    <Button
-                      key={item.label}
-                      variant="ghost"
-                      className="w-full justify-start h-10 px-3"
-                      onClick={item.link}
-                    >
-                      {item.label}
-                    </Button>
+                <div className="space-y-6">
+                  {navSections.map((section) => (
+                    <div key={section.title} className="space-y-1">
+                      <h3 className="px-3 text-sm font-medium text-muted-foreground mb-3">
+                        {section.title}
+                      </h3>
+                      {section.items.map((item) => (
+                        <Button
+                          key={item.label}
+                          variant="ghost"
+                          className="w-full justify-start h-10 px-3"
+                          onClick={item.link}
+                        >
+                          {item.label}
+                        </Button>
+                      ))}
+                    </div>
                   ))}
                 </div>
 
