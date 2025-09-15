@@ -119,7 +119,7 @@ function RouteComponent() {
               <h4 className="font-semibold text-gray-900">
                 Recommended: PlanetScale
               </h4>
-              <p className="text-gray-600">
+              <p className="">
                 <strong>PlanetScale</strong> offers exceptional developer
                 experience with <strong>branching workflows</strong>, automatic
                 scaling, and reliable serverless connections. Their
@@ -132,11 +132,11 @@ function RouteComponent() {
               <h4 className="font-semibold text-gray-900">
                 Budget-Friendly Options with Free Tiers
               </h4>
-              <p className="text-gray-600 mb-2">
+              <p className=" mb-2">
                 If you're on a budget, these providers offer generous free
                 tiers:
               </p>
-              <ul className="list-disc pl-6 mt-2 space-y-2 text-gray-600">
+              <ul className="list-disc pl-6 mt-2 space-y-2 ">
                 <li>
                   <strong>Supabase</strong> - Full-stack platform with
                   PostgreSQL and real-time features

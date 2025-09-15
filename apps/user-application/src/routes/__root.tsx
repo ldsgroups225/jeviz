@@ -7,6 +7,7 @@ import {
 
 import appCss from "../styles.css?url";
 import { ThemeProvider, useTheme } from "@/components/theme-provider";
+import { NotFoundPage } from "@/components/common/not-found-page";
 
 import type { QueryClient } from "@tanstack/react-query";
 import { PropsWithChildren } from "react";
@@ -41,6 +42,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     // and pass it into the theme provider
   },
   component: RootComponent,
+  notFoundComponent: NotFoundPage,
 });
 
 function RootComponent() {

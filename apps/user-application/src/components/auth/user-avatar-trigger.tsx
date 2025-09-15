@@ -5,7 +5,7 @@ import { authClient } from "@/components/auth/client";
 import { AccountDialog } from "@/components/auth/account-dialog";
 
 export function UserAvatarTrigger() {
-  const { data: session } = authClient.useSession();
+  const { data: session, error } = authClient.useSession();
 
   const signIn = async () => {
     await authClient.signIn.social({
@@ -13,13 +13,15 @@ export function UserAvatarTrigger() {
     });
   };
 
-  if (!session) {
+  if (!session || error) {
     return (
       <Button onClick={signIn} variant="outline">
         Sign In
       </Button>
     );
   }
+
+  console.log(session);
 
   const user = session.user;
   const fallbackText = user.name
