@@ -157,7 +157,7 @@ function RouteComponent() {
             </div>
           </div>
 
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm ">
             The budget-friendly options above offer{" "}
             <strong>generous free tiers</strong> to get you started without
             upfront costs.

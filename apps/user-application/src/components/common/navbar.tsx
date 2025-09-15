@@ -80,22 +80,24 @@ export function Navbar() {
 
               <div className="space-y-6">
                 {/* Navigation Links */}
-                <div className="space-y-6">
+                <div className="space-y-8">
                   {navSections.map((section) => (
-                    <div key={section.title} className="space-y-1">
-                      <h3 className="px-3 text-sm font-medium text-muted-foreground mb-3">
+                    <div key={section.title} className="space-y-3">
+                      <h3 className="px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80 border-b border-border/50 pb-2">
                         {section.title}
                       </h3>
-                      {section.items.map((item) => (
-                        <Button
-                          key={item.label}
-                          variant="ghost"
-                          className="w-full justify-start h-10 px-3"
-                          onClick={item.link}
-                        >
-                          {item.label}
-                        </Button>
-                      ))}
+                      <div className="space-y-1">
+                        {section.items.map((item) => (
+                          <Button
+                            key={item.label}
+                            variant="ghost"
+                            className="w-full justify-start h-9 px-6 text-sm text-foreground/90 hover:text-foreground hover:bg-accent/50 transition-colors"
+                            onClick={item.link}
+                          >
+                            {item.label}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>

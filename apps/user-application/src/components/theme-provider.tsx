@@ -14,7 +14,7 @@ type Props = PropsWithChildren<{ initialTheme?: Theme }>;
 const ThemeContext = createContext<ThemeContextVal | null>(null);
 
 export function ThemeProvider({ children, initialTheme }: Props) {
-  const [theme, setThemeState] = useState<Theme>(initialTheme || "light");
+  const [theme, setThemeState] = useState<Theme>(initialTheme || "dark");
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
