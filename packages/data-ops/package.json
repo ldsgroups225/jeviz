@@ -23,7 +23,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.json --outDir ./dist && tsc-alias",
     "better-auth:generate": "npx @better-auth/cli@latest generate --config ./config/auth.ts --output ./src/drizzle/auth-schema.ts",
-    "better-auth:migrate": "npx @better-auth/cli@latest migrate --config ./config/auth.ts",
     "drizzle:generate": "drizzle-kit generate --config drizzle.config.ts",
     "drizzle:migrate": "drizzle-kit migrate --config drizzle.config.ts",
     "pull": "drizzle-kit pull --config drizzle.config.ts"
