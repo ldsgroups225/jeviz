@@ -134,9 +134,10 @@ export function initDatabase(connection: {
   password: string;
 }) {
   if (db) {
-    return db
+    return db;
   }
-  db = drizzle({ connection });
+  const connectionString = \`postgres://\${connection.username}:\${connection.password}@\${connection.host}\`;
+  db = drizzle(connectionString);
   return db;
 }
 
@@ -145,6 +146,7 @@ export function getDb() {
     throw new Error("Database not initialized");
   }
   return db;
-}`,
+}
+  `,
   },
 };
