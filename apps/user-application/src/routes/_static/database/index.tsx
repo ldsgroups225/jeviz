@@ -225,7 +225,7 @@ function RouteComponent() {
             ))}
           </Tabs>
         </StepCard>
-        <StepCard step={4} title="Setup Drizzle Kit">
+        <StepCard step={4} title="Database Runtime Client">
           <p>
             When working with serverless environments, database connections are
             typically established at runtime, during the execution of your
