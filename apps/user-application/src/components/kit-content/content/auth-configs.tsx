@@ -3,37 +3,24 @@ export const authEnvConfigs = {
     label: "PostgreSQL",
     code: `# Auth Environment Variables
 BETTER_AUTH_SECRET="your-secret-key-here"
-BETTER_AUTH_URL="https://your-domain.com"
 
 # Google OAuth (optional)
 GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-
-# Database credentials (reuse from database setup)
-DATABASE_HOST="hostname.com/database-name"
-DATABASE_USERNAME="username"
-DATABASE_PASSWORD="password"`,
+GOOGLE_CLIENT_SECRET="your-google-client-secret"`,
   },
   mysql: {
     label: "MySQL",
     code: `# Auth Environment Variables
 BETTER_AUTH_SECRET="your-secret-key-here"
-BETTER_AUTH_URL="https://your-domain.com"
 
 # Google OAuth (optional)
 GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-
-# Database credentials (reuse from database setup)
-DATABASE_HOST="hostname.com/database-name"
-DATABASE_USERNAME="username"
-DATABASE_PASSWORD="password"`,
+GOOGLE_CLIENT_SECRET="your-google-client-secret"`,
   },
   cloudflare_d1: {
     label: "Cloudflare D1",
     code: `# Auth Environment Variables
 BETTER_AUTH_SECRET="your-secret-key-here"
-BETTER_AUTH_URL="https://your-domain.com"
 
 # Google OAuth (optional)
 GOOGLE_CLIENT_ID="your-google-client-id"

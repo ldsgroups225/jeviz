@@ -104,11 +104,6 @@ function AuthSetupPage() {
               <code>https://your-domain.com/api/auth/callback/google</code>
             </p>
           </Callout>
-          <p className="mt-4">
-            To ensure your Cloudflare environment has access to the correct
-            types, run <code>pnpm run cf-typegen</code>.
-          </p>
-          <CodeBlock code={`pnpm run cf-typegen`} />
         </StepCard>
 
         <StepCard step={2} title="Configure Better Auth CLI">
@@ -150,7 +145,7 @@ function AuthSetupPage() {
 
           <div className="mt-4 space-y-4">
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
+              <h4 className="font-semibold  mb-2">
                 1. Generate Better Auth schemas
               </h4>
               <CodeBlock
@@ -158,7 +153,7 @@ function AuthSetupPage() {
                 code="pnpm run better-auth:generate"
                 filename="Terminal"
               />
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm  mt-2">
                 This creates{" "}
                 <code>packages/data-ops/src/drizzle/auth-schema.ts</code> with
                 your authentication tables
@@ -166,7 +161,7 @@ function AuthSetupPage() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
+              <h4 className="font-semibold  mb-2">
                 2. Generate Drizzle migrations
               </h4>
               <CodeBlock
@@ -174,14 +169,14 @@ function AuthSetupPage() {
                 code="pnpm run drizzle:generate"
                 filename="Terminal"
               />
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm  mt-2">
                 This creates SQL migration files in{" "}
                 <code>packages/data-ops/src/drizzle</code>
               </p>
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-900 mb-2">
+              <h4 className="font-semibold  mb-2">
                 3. Run migrations (optional)
               </h4>
               <CodeBlock
@@ -189,7 +184,7 @@ function AuthSetupPage() {
                 code="pnpm run drizzle:migrate"
                 filename="Terminal"
               />
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm  mt-2">
                 This automatically applies migrations to create the auth tables
               </p>
             </div>

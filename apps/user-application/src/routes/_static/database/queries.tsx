@@ -304,7 +304,7 @@ export const ServerRoute = createServerFileRoute("/api/webhook/polar").methods({
             filename="apps/user-application/package.json"
           />
 
-          <p className="mt-3 text-sm text-gray-600">
+          <p className="mt-3 text-sm ">
             The <code>workspace:^</code> syntax tells pnpm to use the local
             workspace version of the package, ensuring you're always using the
             latest queries from your data-ops package.
@@ -346,7 +346,7 @@ export const ServerRoute = createServerFileRoute("/api/webhook/polar").methods({
                 <h4 className="font-semibold mb-2">
                   Using in Server Middleware
                 </h4>
-                <p className="text-gray-600 mb-4">
+                <p className=" mb-4">
                   Queries can also be used in middleware for authentication,
                   authorization, and request preprocessing.
                 </p>
@@ -363,7 +363,7 @@ export const ServerRoute = createServerFileRoute("/api/webhook/polar").methods({
                 <h4 className="font-semibold mb-2">
                   Using in REST API Routes & Webhooks
                 </h4>
-                <p className="text-gray-600 mb-4">
+                <p className=" mb-4">
                   Import and use queries in API routes for handling webhooks,
                   REST endpoints, and other server-side API operations.
                 </p>

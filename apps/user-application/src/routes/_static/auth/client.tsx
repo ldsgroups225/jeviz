@@ -96,10 +96,10 @@ export const authClient = createAuthClient();`}
 
           <div className="mt-4 space-y-6">
             <div>
-              <h4 className="font-semibold text-gray-900 mb-3">
+              <h4 className="font-semibold  mb-3">
                 Google OAuth Login Component
               </h4>
-              <p className="text-sm text-gray-600 mb-3">
+              <p className="text-sm  mb-3">
                 The login component uses <code>authClient.signIn.social()</code>
                 to initiate OAuth flows with redirect handling.
               </p>
@@ -151,10 +151,10 @@ export function GoogleLogin() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-900 mb-3">
+              <h4 className="font-semibold  mb-3">
                 Account Dialog with Logout
               </h4>
-              <p className="text-sm text-gray-600 mb-3">
+              <p className="text-sm  mb-3">
                 The account dialog demonstrates session state management and
                 logout functionality using <code>useSession</code> hook.
               </p>
@@ -256,26 +256,22 @@ export function AccountDialog({ children }: AccountDialogProps) {
 
         <StepCard step={3} title="Protecting Routes with Authentication">
           <p>
-            Better Auth provides two approaches for route protection: client-side
-            authentication checks and server-side rendering (SSR) protection.
-            Both patterns ensure users must be authenticated to access certain
-            areas of your application.
+            Better Auth provides two approaches for route protection:
+            client-side authentication checks and server-side rendering (SSR)
+            protection. Both patterns ensure users must be authenticated to
+            access certain areas of your application.
           </p>
           <p className="mt-3">
             Choose the appropriate method based on your security requirements
             and user experience needs.
           </p>
 
-          <Tabs 
-            className="mt-4" 
-            value={activeTab} 
-            onValueChange={setActiveTab}
-          >
+          <Tabs className="mt-4" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="client-side">Client-side</TabsTrigger>
               <TabsTrigger value="ssr">Server-side (SSR)</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="client-side">
               <CodeBlock
                 language="typescript"
@@ -369,7 +365,9 @@ function RouteComponent() {
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
-                  <h5 className="font-medium text-foreground mb-2">Client-side</h5>
+                  <h5 className="font-medium text-foreground mb-2">
+                    Client-side
+                  </h5>
                   <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
                     <li>Authentication check happens in the browser</li>
                     <li>Loading state while checking session</li>
@@ -378,12 +376,16 @@ function RouteComponent() {
                   </ul>
                 </div>
                 <div>
-                  <h5 className="font-medium text-foreground mb-2">Server-side (SSR)</h5>
+                  <h5 className="font-medium text-foreground mb-2">
+                    Server-side (SSR)
+                  </h5>
                   <ul className="list-disc pl-4 space-y-1 text-muted-foreground">
                     <li>Authentication validated on server</li>
                     <li>No loading state - immediate auth decision</li>
                     <li>Better security and SEO</li>
-                    <li>Uses <code>beforeLoad</code> and error handling</li>
+                    <li>
+                      Uses <code>beforeLoad</code> and error handling
+                    </li>
                   </ul>
                 </div>
               </div>

@@ -116,9 +116,7 @@ function RouteComponent() {
 
           <div className="mt-4 space-y-4">
             <div>
-              <h4 className="font-semibold text-gray-900">
-                Recommended: PlanetScale
-              </h4>
+              <h4 className="font-semibold ">Recommended: PlanetScale</h4>
               <p className="">
                 <strong>PlanetScale</strong> offers exceptional developer
                 experience with <strong>branching workflows</strong>, automatic
@@ -129,7 +127,7 @@ function RouteComponent() {
             </div>
 
             <div>
-              <h4 className="font-semibold text-gray-900">
+              <h4 className="font-semibold ">
                 Budget-Friendly Options with Free Tiers
               </h4>
               <p className=" mb-2">
