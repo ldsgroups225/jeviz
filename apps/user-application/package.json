@@ -4,7 +4,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "start": "node dist/ssr/server.js",
     "preview": "vite preview",
     "build": "vite build",
     "deploy": "pnpm run build && wrangler deploy",
