@@ -1,6 +1,6 @@
 import { DurableObject } from "cloudflare:workers";
 
-export class LinkClickTracker extends DurableObject {
+export class ExampleDurableObject extends DurableObject {
   savedData: string | undefined;
 
   constructor(ctx: DurableObjectState, env: Env) {
