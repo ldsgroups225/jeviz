@@ -1,33 +1,39 @@
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import tsConfigPaths from "vite-tsconfig-paths";
 import viteReact from "@vitejs/plugin-react";
-import viteTsConfigPaths from "vite-tsconfig-paths";
-import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
-const config = defineConfig({
+export default defineConfig({
   optimizeDeps: {
-    include: ["lucide-react", "@radix-ui/*"],
+    exclude: ["fsevents"],
   },
-  ssr: {
-    noExternal: ["lucide-react", "@radix-ui/*"],
+  environments: {
+    ssr: {
+      build: {
+        rollupOptions: {
+          preserveEntrySignatures: "strict",
+        },
+      },
+    },
+  },
+  server: {
+    port: 3000,
+    allowedHosts: ["ef54240d0784.ngrok-free.app"],
   },
   plugins: [
-    // this is the plugin that enables path aliases
-    viteTsConfigPaths({
+    cloudflare({
+      viteEnvironment: { name: "ssr" },
+      experimental: {
+        remoteBindings: true,
+      },
+    }),
+    tsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
     tailwindcss(),
-    tanstackStart({
-      srcDirectory: "src",
-      start: { entry: "./start.tsx" },
-      server: { entry: "./server.ts" },
-    }),
+    tanstackStart(),
     viteReact(),
-    cloudflare({
-      viteEnvironment: { name: "ssr" },
-    }),
   ],
 });
-
-export default config;

@@ -26,7 +26,7 @@ export const getProducts = baseFunction.handler(async (ctx) => {
 });
 
 export const createPaymentLink = baseFunction
-  .inputValidator((data: z.infer<typeof PaymentLink>) => {
+  .validator((data: z.infer<typeof PaymentLink>) => {
     return PaymentLink.parse(data);
   })
   .handler(async (ctx) => {
@@ -42,7 +42,7 @@ export const createPaymentLink = baseFunction
   });
 
 export const validPayment = baseFunction
-  .inputValidator((data: string) => {
+  .validator((data: string) => {
     console.log("validatePayment", data);
     if (typeof data !== "string") {
       throw new Error("Invalid data type");

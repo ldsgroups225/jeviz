@@ -1,23 +1,15 @@
-// import { getAuth } from "@repo/data-ops/auth/server";
-import { createFileRoute } from "@tanstack/react-router";
+import { getAuth } from "@repo/data-ops/auth/server";
+import { createServerFileRoute } from "@tanstack/react-start/server";
 
-export const Route = createFileRoute("/api/auth/$")({
-  server: {
-    handlers: {
-      GET: ({ request }) => {
-        // const auth = getAuth();
-        // return auth.handler(request);
-        return new Response(null, {
-          status: 401,
-        });
-      },
-      POST: ({ request }) => {
-        // const auth = getAuth();
-        // return auth.handler(request);
-        return new Response(null, {
-          status: 401,
-        });
-      },
-    },
+export const ServerRoute = createServerFileRoute("/api/auth/$").methods({
+  GET: ({ request }) => {
+    // const auth = getAuth();
+    // return auth.handler(request);
+    return new Response("Not implemented", { status: 501 });
+  },
+  POST: ({ request }) => {
+    // const auth = getAuth();
+    // return auth.handler(request);
+    return new Response("Not implemented", { status: 501 });
   },
 });
