@@ -68,19 +68,17 @@ export const Route = createRootRouteWithContext<{
 
 function RootComponent() {
   return (
-    <ThemeProvider>
-      <RootDocument>
-        <Outlet />
-      </RootDocument>
-    </ThemeProvider>
+    <RootDocument>
+      <Outlet />
+    </RootDocument>
   );
 }
 
 function RootDocument({ children }: PropsWithChildren) {
-  const { theme } = useTheme();
+  // const { theme } = useTheme();
 
   return (
-    <html lang="en" className={theme} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
