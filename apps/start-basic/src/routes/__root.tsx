@@ -2,147 +2,21 @@
 import {
   HeadContent,
   Link,
+  Outlet,
   Scripts,
-  createRootRoute,
+  createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import * as React from "react";
+import { PropsWithChildren } from "react";
 import { DefaultCatchBoundary } from "@/components/DefaultCatchBoundary";
 import { NotFound } from "@/components/NotFound";
-import { Test, startInstance } from "@/start";
 import appCss from "@/styles/app.css?url";
 import { seo } from "@/utils/seo";
+import type { QueryClient } from "@tanstack/react-query";
+import { ThemeProvider, useTheme } from "@/components/theme-provider";
 
-export const testServerMw = startInstance
-  .createMiddleware()
-  .server(({ next, context }) => {
-    context.fromFetch;
-    //      ^?
-    context.fromServerMw;
-    //      ^?
-
-    return next({
-      context: {
-        fromIndexServerMw: true,
-      },
-    });
-  });
-
-export const testFnMw = startInstance
-  .createMiddleware({ type: "function" })
-  .middleware([testServerMw])
-  .server(({ next, context }) => {
-    context.fromFetch;
-    //      ^?
-    context.fromServerMw;
-    //      ^?
-    context.fromFnMw;
-    //      ^?
-    context.fromIndexServerMw;
-    //      ^?
-
-    return next({
-      context: {
-        fromIndexFnMw: true,
-      },
-    });
-  });
-
-export const testGetMiddleware = startInstance
-  .createMiddleware()
-  .server(({ next, context }) => {
-    return next({
-      context: {
-        fromGetMiddleware: true,
-      },
-    });
-  });
-
-export const Route = createRootRoute({
-  server: {
-    middleware: [testServerMw],
-    handlers: {
-      GET: ({ context, next }) => {
-        context.fromFetch;
-        //      ^?
-        context.fromServerMw;
-        //      ^?
-        context.fromIndexServerMw;
-        //      ^?
-        return next({
-          context: {
-            fromGet: true,
-          },
-        });
-      },
-      POST: ({ context, next }) => {
-        context.fromFetch;
-        context.fromServerMw;
-        context.fromIndexServerMw;
-        return next({
-          context: {
-            fromPost: true,
-          },
-        });
-      },
-    },
-    // handlers: ({ createHandlers }) =>
-    //   createHandlers({
-    //     GET: {
-    //       middleware: [testGetMiddleware],
-    //       handler: ({ context, next }) => {
-    //         context.fromFetch
-    //         //      ^?
-    //         context.fromServerMw
-    //         //      ^?
-    //         context.fromIndexServerMw
-    //         //      ^?
-    //         context.fromGetMiddleware
-    //         //      ^?
-    //         return next({
-    //           context: {
-    //             fromGet: true,
-    //             fromPost: false,
-    //           },
-    //         })
-    //       },
-    //     },
-    //     POST: {
-    //       handler: ({ next }) => {
-    //         return next({
-    //           context: {
-    //             fromGet: false,
-    //             fromPost: true,
-    //           },
-    //         })
-    //       },
-    //     },
-    //   }),
-    test: (test) => {},
-  },
-  beforeLoad: ({ serverContext }) => {
-    serverContext?.fromFetch;
-    //             ^?
-    serverContext?.fromServerMw;
-    //             ^?
-    serverContext?.fromIndexServerMw;
-    //             ^?
-    serverContext?.fromGet;
-    //             ^?
-    return serverContext;
-  },
-  // ssr: false,
-  loader: ({ context }) => {
-    context?.fromFetch;
-    //             ^?
-    context?.fromServerMw;
-    //             ^?
-    context?.fromIndexServerMw;
-    //             ^?
-    context?.fromPost;
-    //             ^?
-    return new Test("test");
-  },
+export const Route = createRootRouteWithContext<{
+  queryClient: QueryClient;
+}>()({
   head: () => ({
     meta: [
       {
@@ -180,80 +54,38 @@ export const Route = createRootRoute({
       { rel: "manifest", href: "/site.webmanifest", color: "#fffff" },
       { rel: "icon", href: "/favicon.ico" },
     ],
-    scripts: [
-      {
-        src: "/customScript.js",
-        type: "text/javascript",
-      },
-    ],
   }),
-  errorComponent: DefaultCatchBoundary,
+  errorComponent: (props) => {
+    return (
+      <RootDocument>
+        <DefaultCatchBoundary {...props} />
+      </RootDocument>
+    );
+  },
   notFoundComponent: () => <NotFound />,
-  shellComponent: RootDocument,
+  component: RootComponent,
 });
 
-function RootDocument({ children }: { children: React.ReactNode }) {
+function RootComponent() {
   return (
-    <html>
+    <ThemeProvider>
+      <RootDocument>
+        <Outlet />
+      </RootDocument>
+    </ThemeProvider>
+  );
+}
+
+function RootDocument({ children }: PropsWithChildren) {
+  const { theme } = useTheme();
+
+  return (
+    <html lang="en" className={theme} suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <div className="p-2 flex gap-2 text-lg">
-          <Link
-            to="/"
-            activeProps={{
-              className: "font-bold",
-            }}
-            activeOptions={{ exact: true }}
-          >
-            Home
-          </Link>{" "}
-          <Link
-            to="/posts"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            Posts
-          </Link>{" "}
-          <Link
-            to="/users"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            Users
-          </Link>{" "}
-          <Link
-            to="/route-a"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            Pathless Layout
-          </Link>{" "}
-          <Link
-            to="/deferred"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            Deferred
-          </Link>{" "}
-          <Link
-            // @ts-expect-error
-            to="/this-route-does-not-exist"
-            activeProps={{
-              className: "font-bold",
-            }}
-          >
-            This Route Does Not Exist
-          </Link>
-        </div>
-        <hr />
         {children}
-        <TanStackRouterDevtools position="bottom-right" />
         <Scripts />
       </body>
     </html>
