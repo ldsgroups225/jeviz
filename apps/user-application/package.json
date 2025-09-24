@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "preview": "vite preview",
+    "start": "node .output/server/index.mjs",
     "build": "vite build",
-    "deploy": "pnpm run build && wrangler deploy",
     "serve": "vite preview",
+    "test": "vitest run",
     "cf-typegen": "wrangler types --env-interface Env",
-    "test": "vitest run"
+    "deploy": "pnpm run build && wrangler deploy"
   },
   "dependencies": {
     "@polar-sh/sdk": "^0.34.13",
@@ -25,9 +25,12 @@
     "@repo/data-ops": "workspace:^",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-query": "^5.66.5",
-    "@tanstack/react-router": "1.132.0-alpha.24",
-    "@tanstack/react-router-ssr-query": "1.132.0-alpha.24",
-    "@tanstack/react-start": "1.132.0-alpha.24",
+    "@tanstack/react-query-devtools": "^5.84.2",
+    "@tanstack/react-router": "^1.132.0",
+    "@tanstack/react-router-devtools": "^1.132.0",
+    "@tanstack/react-router-ssr-query": "^1.131.7",
+    "@tanstack/react-start": "^1.131.7",
+    "@tanstack/router-plugin": "^1.132.0",
     "better-auth": "^1.3.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -40,21 +43,21 @@
     "tailwindcss": "^4.0.6",
     "tw-animate-css": "^1.3.6",
     "vite-tsconfig-paths": "^5.1.4",
-    "zod": "^4.1.0"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.13.3",
+    "@cloudflare/vite-plugin": "^1.13.4",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.10.2",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.4",
     "jsdom": "^26.0.0",
     "typescript": "^5.7.2",
-    "vite": "^7.1.6",
+    "vite": "^6.3.5",
     "vitest": "^3.0.5",
     "web-vitals": "^4.2.4",
-    "wrangler": "^4.37.0"
+    "wrangler": "^4.39.0"
   }
 }

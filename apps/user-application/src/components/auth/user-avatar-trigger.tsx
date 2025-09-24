@@ -21,8 +21,6 @@ export function UserAvatarTrigger() {
     );
   }
 
-  console.log(session);
-
   const user = session.user;
   const fallbackText = user.name
     ? user.name.charAt(0).toUpperCase()
