@@ -11,6 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StaticRouteRouteImport } from './routes/_static/route'
 import { Route as StaticIndexRouteImport } from './routes/_static/index'
+import { Route as StaticDatabaseIndexRouteImport } from './routes/_static/database/index'
+import { Route as StaticAuthIndexRouteImport } from './routes/_static/auth/index'
+import { Route as StaticDatabaseQueriesRouteImport } from './routes/_static/database/queries'
+import { Route as StaticAuthClientRouteImport } from './routes/_static/auth/client'
 
 const StaticRouteRoute = StaticRouteRouteImport.update({
   id: '/_static',
@@ -21,24 +25,63 @@ const StaticIndexRoute = StaticIndexRouteImport.update({
   path: '/',
   getParentRoute: () => StaticRouteRoute,
 } as any)
+const StaticDatabaseIndexRoute = StaticDatabaseIndexRouteImport.update({
+  id: '/database/',
+  path: '/database/',
+  getParentRoute: () => StaticRouteRoute,
+} as any)
+const StaticAuthIndexRoute = StaticAuthIndexRouteImport.update({
+  id: '/auth/',
+  path: '/auth/',
+  getParentRoute: () => StaticRouteRoute,
+} as any)
+const StaticDatabaseQueriesRoute = StaticDatabaseQueriesRouteImport.update({
+  id: '/database/queries',
+  path: '/database/queries',
+  getParentRoute: () => StaticRouteRoute,
+} as any)
+const StaticAuthClientRoute = StaticAuthClientRouteImport.update({
+  id: '/auth/client',
+  path: '/auth/client',
+  getParentRoute: () => StaticRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof StaticIndexRoute
+  '/auth/client': typeof StaticAuthClientRoute
+  '/database/queries': typeof StaticDatabaseQueriesRoute
+  '/auth': typeof StaticAuthIndexRoute
+  '/database': typeof StaticDatabaseIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof StaticIndexRoute
+  '/auth/client': typeof StaticAuthClientRoute
+  '/database/queries': typeof StaticDatabaseQueriesRoute
+  '/auth': typeof StaticAuthIndexRoute
+  '/database': typeof StaticDatabaseIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_static': typeof StaticRouteRouteWithChildren
   '/_static/': typeof StaticIndexRoute
+  '/_static/auth/client': typeof StaticAuthClientRoute
+  '/_static/database/queries': typeof StaticDatabaseQueriesRoute
+  '/_static/auth/': typeof StaticAuthIndexRoute
+  '/_static/database/': typeof StaticDatabaseIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/auth/client' | '/database/queries' | '/auth' | '/database'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_static' | '/_static/'
+  to: '/' | '/auth/client' | '/database/queries' | '/auth' | '/database'
+  id:
+    | '__root__'
+    | '/_static'
+    | '/_static/'
+    | '/_static/auth/client'
+    | '/_static/database/queries'
+    | '/_static/auth/'
+    | '/_static/database/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -61,15 +104,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaticIndexRouteImport
       parentRoute: typeof StaticRouteRoute
     }
+    '/_static/database/': {
+      id: '/_static/database/'
+      path: '/database'
+      fullPath: '/database'
+      preLoaderRoute: typeof StaticDatabaseIndexRouteImport
+      parentRoute: typeof StaticRouteRoute
+    }
+    '/_static/auth/': {
+      id: '/_static/auth/'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof StaticAuthIndexRouteImport
+      parentRoute: typeof StaticRouteRoute
+    }
+    '/_static/database/queries': {
+      id: '/_static/database/queries'
+      path: '/database/queries'
+      fullPath: '/database/queries'
+      preLoaderRoute: typeof StaticDatabaseQueriesRouteImport
+      parentRoute: typeof StaticRouteRoute
+    }
+    '/_static/auth/client': {
+      id: '/_static/auth/client'
+      path: '/auth/client'
+      fullPath: '/auth/client'
+      preLoaderRoute: typeof StaticAuthClientRouteImport
+      parentRoute: typeof StaticRouteRoute
+    }
   }
 }
 
 interface StaticRouteRouteChildren {
   StaticIndexRoute: typeof StaticIndexRoute
+  StaticAuthClientRoute: typeof StaticAuthClientRoute
+  StaticDatabaseQueriesRoute: typeof StaticDatabaseQueriesRoute
+  StaticAuthIndexRoute: typeof StaticAuthIndexRoute
+  StaticDatabaseIndexRoute: typeof StaticDatabaseIndexRoute
 }
 
 const StaticRouteRouteChildren: StaticRouteRouteChildren = {
   StaticIndexRoute: StaticIndexRoute,
+  StaticAuthClientRoute: StaticAuthClientRoute,
+  StaticDatabaseQueriesRoute: StaticDatabaseQueriesRoute,
+  StaticAuthIndexRoute: StaticAuthIndexRoute,
+  StaticDatabaseIndexRoute: StaticDatabaseIndexRoute,
 }
 
 const StaticRouteRouteWithChildren = StaticRouteRoute._addFileChildren(

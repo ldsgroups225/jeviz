@@ -6,6 +6,17 @@ import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 export default defineConfig({
+  optimizeDeps: {
+    include: ["lucide-react", "@radix-ui/*", "class-variance-authority"],
+  },
+  ssr: {
+    noExternal: [
+      "lucide-react",
+      "@radix-ui/*",
+      "class-variance-authority",
+      "react-dom",
+    ],
+  },
   server: {
     port: 3000,
   },

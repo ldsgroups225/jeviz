@@ -6,6 +6,12 @@ import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
 const config = defineConfig({
+  optimizeDeps: {
+    include: ["lucide-react", "@radix-ui/*"],
+  },
+  ssr: {
+    noExternal: ["lucide-react", "@radix-ui/*"],
+  },
   plugins: [
     // this is the plugin that enables path aliases
     viteTsConfigPaths({
