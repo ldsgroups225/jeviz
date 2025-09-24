@@ -1,7 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { Subscription } from "@polar-sh/sdk/models/components/subscription.js";
 import { Webhooks } from "@polar-sh/tanstack-start";
 // import { updateSubscription } from "@repo/data-ops/queries/polar";
-import { createServerFileRoute } from "@tanstack/react-start/server";
 import { env } from "cloudflare:workers";
 
 async function handleSubscription(payload: { data: Subscription }) {
@@ -22,14 +22,18 @@ async function handleSubscription(payload: { data: Subscription }) {
   // });
 }
 
-export const ServerRoute = createServerFileRoute("/api/webhook/polar").methods({
-  POST: Webhooks({
-    webhookSecret: env.POLAR_WEBHOOK_SECRET,
-    onSubscriptionActive: handleSubscription,
-    onSubscriptionCanceled: handleSubscription,
-    onSubscriptionCreated: handleSubscription,
-    onSubscriptionUpdated: handleSubscription,
-    onSubscriptionRevoked: handleSubscription,
-    onSubscriptionUncanceled: handleSubscription,
-  }),
+export const Route = createFileRoute("/api/webhook/polar")({
+  server: {
+    handlers: {
+      POST: Webhooks({
+        webhookSecret: env.POLAR_WEBHOOK_SECRET,
+        onSubscriptionActive: handleSubscription,
+        onSubscriptionCanceled: handleSubscription,
+        onSubscriptionCreated: handleSubscription,
+        onSubscriptionUpdated: handleSubscription,
+        onSubscriptionRevoked: handleSubscription,
+        onSubscriptionUncanceled: handleSubscription,
+      }),
+    },
+  },
 });

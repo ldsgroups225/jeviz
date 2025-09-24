@@ -1,18 +1,9 @@
-import {
-  createStartHandler,
-  defaultStreamHandler,
-} from "@tanstack/react-start/server";
-
-import { createRouter } from "./router";
-// import { initDatabase } from "@repo/data-ops/database/setup";
-// import { setAuth } from "@repo/data-ops/auth/server";
-
-const fetch = createStartHandler({
-  createRouter: createRouter,
-})(defaultStreamHandler);
+// DO NOT DELETE THIS FILE!!!
+// This file is a good smoke test to make sure the custom server entry is working
+import handler from "@tanstack/react-start/server-entry";
 
 export default {
-  fetch: (request: Request) => {
-    return fetch(request);
+  fetch(request: Request) {
+    return handler.fetch(request, { context: { fromFetch: true } });
   },
 };
