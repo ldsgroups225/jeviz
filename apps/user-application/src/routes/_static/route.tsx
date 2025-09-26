@@ -1,6 +1,5 @@
-import { Navbar } from "@/components/common/navbar";
-import { Outlet } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+import { NavigationBar } from "@/components/navigation";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_static")({
   component: RouteComponent,
@@ -9,9 +8,10 @@ export const Route = createFileRoute("/_static")({
 function RouteComponent() {
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-
-      <Outlet />
+      <NavigationBar />
+      <main className="pt-16">
+        <Outlet />
+      </main>
     </div>
   );
 }

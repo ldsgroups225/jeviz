@@ -5,10 +5,11 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { authClient } from "./client";
+import { authClient } from "@/lib/auth-client";
 import { LogOut, Palette } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 interface AccountDialogProps {
   children: React.ReactNode;
@@ -32,7 +33,9 @@ export function AccountDialog({ children }: AccountDialogProps) {
 
   return (
     <Dialog>
-      {children}
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center pb-4">
           <DialogTitle>Account</DialogTitle>

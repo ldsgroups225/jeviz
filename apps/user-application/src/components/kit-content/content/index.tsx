@@ -1,1 +1,0 @@
-export { databaseConfigs } from "./database-configs";
