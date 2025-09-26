@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { createPaymentLink } from "@/server/functions/payments";
+import { createPaymentLink } from "@/core/functions/payments";
 
 export function useCheckout() {
   const checkoutMutation = useMutation({

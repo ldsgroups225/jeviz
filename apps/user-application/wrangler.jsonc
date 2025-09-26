@@ -1,11 +1,10 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "saas-kit-user-application",
-  "compatibility_date": "2025-08-13",
+  "name": "tanstack-start-app",
+  "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
   "main": "./src/server.ts",
-
-  "observability": {
-    "enabled": true,
+  "vars": {
+    "MY_VAR": "Hello from Cloudflare",
   },
 }

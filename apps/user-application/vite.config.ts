@@ -1,39 +1,29 @@
-import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
-import tsConfigPaths from "vite-tsconfig-paths";
 import viteReact from "@vitejs/plugin-react";
+import viteTsConfigPaths from "vite-tsconfig-paths";
+import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 
-export default defineConfig({
-  optimizeDeps: {
-    exclude: ["fsevents"],
-  },
-  environments: {
-    ssr: {
-      build: {
-        rollupOptions: {
-          preserveEntrySignatures: "strict",
-        },
-      },
-    },
-  },
-  server: {
-    port: 3000,
-    allowedHosts: ["ef54240d0784.ngrok-free.app"],
-  },
+const config = defineConfig({
   plugins: [
-    cloudflare({
-      viteEnvironment: { name: "ssr" },
-      experimental: {
-        remoteBindings: true,
-      },
-    }),
-    tsConfigPaths({
+    // this is the plugin that enables path aliases
+    viteTsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      srcDirectory: "src",
+      start: { entry: "./start.tsx" },
+      server: { entry: "./server.ts" },
+    }),
     viteReact(),
+    cloudflare({
+      viteEnvironment: {
+        name: "ssr",
+      },
+    }),
   ],
 });
+
+export default config;
