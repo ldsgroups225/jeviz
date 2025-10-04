@@ -17,6 +17,7 @@ import { Route as OnboardingSeriesRouteImport } from './routes/_onboarding/serie
 import { Route as OnboardingGradeRouteImport } from './routes/_onboarding/grade'
 import { Route as OnboardingCompleteRouteImport } from './routes/_onboarding/complete'
 import { Route as StaticDocsIndexRouteImport } from './routes/_static/docs/index'
+import { Route as AuthLearnIndexRouteImport } from './routes/_auth/learn/index'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as StaticDocsNameRouteImport } from './routes/_static/docs/$name'
@@ -61,6 +62,11 @@ const StaticDocsIndexRoute = StaticDocsIndexRouteImport.update({
   path: '/docs/',
   getParentRoute: () => StaticRouteRoute,
 } as any)
+const AuthLearnIndexRoute = AuthLearnIndexRouteImport.update({
+  id: '/learn/',
+  path: '/learn/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const AuthAppIndexRoute = AuthAppIndexRouteImport.update({
   id: '/app/',
   path: '/app/',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
+  '/learn': typeof AuthLearnIndexRoute
   '/docs': typeof StaticDocsIndexRoute
   '/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
+  '/learn': typeof AuthLearnIndexRoute
   '/docs': typeof StaticDocsIndexRoute
   '/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
@@ -132,6 +140,7 @@ export interface FileRoutesById {
   '/_static/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
+  '/_auth/learn/': typeof AuthLearnIndexRoute
   '/_static/docs/': typeof StaticDocsIndexRoute
   '/_auth/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/_auth/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
@@ -147,6 +156,7 @@ export interface FileRouteTypes {
     | '/docs/$name'
     | '/api/auth/$'
     | '/app'
+    | '/learn'
     | '/docs'
     | '/app/polar/portal'
     | '/app/polar/subscriptions'
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/docs/$name'
     | '/api/auth/$'
     | '/app'
+    | '/learn'
     | '/docs'
     | '/app/polar/portal'
     | '/app/polar/subscriptions'
@@ -176,6 +187,7 @@ export interface FileRouteTypes {
     | '/_static/docs/$name'
     | '/api/auth/$'
     | '/_auth/app/'
+    | '/_auth/learn/'
     | '/_static/docs/'
     | '/_auth/app/polar/portal'
     | '/_auth/app/polar/subscriptions'
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaticDocsIndexRouteImport
       parentRoute: typeof StaticRouteRoute
     }
+    '/_auth/learn/': {
+      id: '/_auth/learn/'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof AuthLearnIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/app/': {
       id: '/_auth/app/'
       path: '/app'
@@ -295,6 +314,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteRouteChildren {
   AuthAppIndexRoute: typeof AuthAppIndexRoute
+  AuthLearnIndexRoute: typeof AuthLearnIndexRoute
   AuthAppPolarPortalRoute: typeof AuthAppPolarPortalRoute
   AuthAppPolarSubscriptionsRoute: typeof AuthAppPolarSubscriptionsRoute
   AuthAppPolarCheckoutSuccessRoute: typeof AuthAppPolarCheckoutSuccessRoute
@@ -302,6 +322,7 @@ interface AuthRouteRouteChildren {
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthAppIndexRoute: AuthAppIndexRoute,
+  AuthLearnIndexRoute: AuthLearnIndexRoute,
   AuthAppPolarPortalRoute: AuthAppPolarPortalRoute,
   AuthAppPolarSubscriptionsRoute: AuthAppPolarSubscriptionsRoute,
   AuthAppPolarCheckoutSuccessRoute: AuthAppPolarCheckoutSuccessRoute,
