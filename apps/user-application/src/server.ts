@@ -25,7 +25,7 @@ export default {
       },
       adapter: {
         drizzleDb: db,
-        provider: "mysql",
+        provider: "pg",
       },
     });
     return handler.fetch(request, {
