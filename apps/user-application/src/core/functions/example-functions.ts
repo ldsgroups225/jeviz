@@ -1,6 +1,6 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
-import { exampleMiddlewareWithContext } from "@/core/middleware/example-middleware";
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
+import { exampleMiddlewareWithContext } from '@/core/middleware/example-middleware';
 // import { env } from "cloudflare:workers";
 
 const baseFunction = createServerFn().middleware([
@@ -16,9 +16,9 @@ type ExampleInput = z.infer<typeof ExampleInputSchema>;
 export const examplefunction = baseFunction
   .inputValidator((data: ExampleInput) => ExampleInputSchema.parse(data))
   .handler(async (ctx) => {
-    console.log("Executing example function");
+    console.log('Executing example function');
     console.log(`The data passed: ${JSON.stringify(ctx.data)}`);
     console.log(`The context from middleware: ${JSON.stringify(ctx.context)}`);
     // console.log(`The Cloudflare Worker Environment: ${JSON.stringify(env)}`);
-    return "Function executed successfully";
+    return 'Function executed successfully';
   });

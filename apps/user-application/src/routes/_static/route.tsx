@@ -1,7 +1,7 @@
-import { NavigationBar } from "@/components/navigation";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { NavigationBar } from '@/components/navigation';
 
-export const Route = createFileRoute("/_static")({
+export const Route = createFileRoute('/_static')({
   component: RouteComponent,
 });
 

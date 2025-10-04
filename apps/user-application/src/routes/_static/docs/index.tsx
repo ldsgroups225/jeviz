@@ -1,72 +1,71 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link } from '@tanstack/react-router';
+import {
+  ArrowRightIcon,
+  BookOpenIcon,
+  CheckCircle,
+  CreditCardIcon,
+  DatabaseIcon,
+  ShieldCheckIcon,
+  Sparkles,
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRightIcon,
-  BookOpenIcon,
-  DatabaseIcon,
-  CreditCardIcon,
-  ShieldCheckIcon,
-  Bot,
-  Sparkles,
-  CheckCircle,
-} from "lucide-react";
+} from '@/components/ui/card';
 
-export const Route = createFileRoute("/_static/docs/")({
+export const Route = createFileRoute('/_static/docs/')({
   component: RouteComponent,
 });
 
 const gettingStartedSteps = [
   {
-    name: "database",
-    title: "Database Setup",
+    name: 'database',
+    title: 'Database Setup',
     description:
-      "Configure your serverless database with edge optimization and HTTP proxying to prevent connection overwhelm in isolated environments.",
+      'Configure your serverless database with edge optimization and HTTP proxying to prevent connection overwhelm in isolated environments.',
     icon: DatabaseIcon,
-    image: "/cloudflare.png",
-    badgeVariant: "default" as const,
+    image: '/cloudflare.png',
+    badgeVariant: 'default' as const,
     features: [
-      "Edge Optimized",
-      "Connection Pooling",
-      "HTTP Proxy",
-      "Serverless Ready",
+      'Edge Optimized',
+      'Connection Pooling',
+      'HTTP Proxy',
+      'Serverless Ready',
     ],
   },
   {
-    name: "authentication",
-    title: "Authentication Setup",
+    name: 'authentication',
+    title: 'Authentication Setup',
     description:
-      "Set up comprehensive authentication with Better Auth, including social providers, email/password, and session management for serverless environments.",
+      'Set up comprehensive authentication with Better Auth, including social providers, email/password, and session management for serverless environments.',
     icon: ShieldCheckIcon,
-    image: "/better-auth.png",
-    badgeVariant: "secondary" as const,
+    image: '/better-auth.png',
+    badgeVariant: 'secondary' as const,
     features: [
-      "Social OAuth",
-      "Session Management",
-      "Database Agnostic",
-      "Edge Compatible",
+      'Social OAuth',
+      'Session Management',
+      'Database Agnostic',
+      'Edge Compatible',
     ],
   },
   {
-    name: "polar",
-    title: "Payment Integration",
+    name: 'polar',
+    title: 'Payment Integration',
     description:
-      "Integrate Polar for modern subscription management and payment processing without webhooks or external database tables.",
+      'Integrate Polar for modern subscription management and payment processing without webhooks or external database tables.',
     icon: CreditCardIcon,
-    image: "/polar.png",
-    badgeVariant: "outline" as const,
+    image: '/polar.png',
+    badgeVariant: 'outline' as const,
     features: [
-      "Subscription Management",
-      "No Webhooks",
-      "Developer Focused",
-      "API Integration",
+      'Subscription Management',
+      'No Webhooks',
+      'Developer Focused',
+      'API Integration',
     ],
   },
 ];
@@ -207,7 +206,7 @@ function RouteComponent() {
                     {step.description}
                   </CardDescription>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {step.features.map((feature) => (
+                    {step.features.map(feature => (
                       <Badge
                         key={feature}
                         variant="secondary"
@@ -223,7 +222,9 @@ function RouteComponent() {
                     className="block"
                   >
                     <Button className="w-full group-hover:bg-primary/90 transition-colors">
-                      Start {step.title}
+                      Start
+                      {' '}
+                      {step.title}
                       <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </Link>

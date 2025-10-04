@@ -1,13 +1,13 @@
-import { createStart } from "@tanstack/react-start";
+import { createStart } from '@tanstack/react-start';
 
-declare module "@tanstack/react-start" {
-  interface Register {
+declare module '@tanstack/react-start' {
+  type Register = {
     server: {
       requestContext: {
         fromFetch: boolean;
       };
     };
-  }
+  };
 }
 
 export const startInstance = createStart(() => {

@@ -1,22 +1,22 @@
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink, Github } from 'lucide-react';
 
 const navigation = {
   main: [
-    { name: "TanStack Start", href: "https://tanstack.com/start" },
-    { name: "TanStack Router", href: "https://tanstack.com/router" },
-    { name: "TanStack Query", href: "https://tanstack.com/query" },
-    { name: "React", href: "https://react.dev" },
+    { name: 'TanStack Start', href: 'https://tanstack.com/start' },
+    { name: 'TanStack Router', href: 'https://tanstack.com/router' },
+    { name: 'TanStack Query', href: 'https://tanstack.com/query' },
+    { name: 'React', href: 'https://react.dev' },
   ],
   tools: [
-    { name: "Vite", href: "https://vitejs.dev" },
-    { name: "Shadcn/UI", href: "https://ui.shadcn.com" },
-    { name: "pnpm Workspaces", href: "https://pnpm.io/workspaces" },
-    { name: "Drizzle ORM", href: "https://orm.drizzle.team" },
+    { name: 'Vite', href: 'https://vitejs.dev' },
+    { name: 'Shadcn/UI', href: 'https://ui.shadcn.com' },
+    { name: 'pnpm Workspaces', href: 'https://pnpm.io/workspaces' },
+    { name: 'Drizzle ORM', href: 'https://orm.drizzle.team' },
   ],
   social: [
     {
-      name: "GitHub",
-      href: "https://github.com/tanstack",
+      name: 'GitHub',
+      href: 'https://github.com/tanstack',
       icon: Github,
     },
   ],
@@ -32,7 +32,7 @@ export function Footer() {
               TanStack Ecosystem
             </h3>
             <ul role="list" className="mt-2 space-y-1">
-              {navigation.main.map((item) => (
+              {navigation.main.map(item => (
                 <li key={item.name}>
                   <a
                     href={item.href}
@@ -53,7 +53,7 @@ export function Footer() {
               Development Tools
             </h3>
             <ul role="list" className="mt-2 space-y-1">
-              {navigation.tools.map((item) => (
+              {navigation.tools.map(item => (
                 <li key={item.name}>
                   <a
                     href={item.href}
@@ -94,7 +94,11 @@ export function Footer() {
               Built with TanStack Start
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              &copy; {new Date().getFullYear()} TanStack. MIT Licensed.
+              &copy;
+              {' '}
+              {new Date().getFullYear()}
+              {' '}
+              TanStack. MIT Licensed.
             </p>
           </div>
         </div>

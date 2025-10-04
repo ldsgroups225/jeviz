@@ -1,6 +1,6 @@
 // packages/data-ops/database/setup.ts
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 
 let db: ReturnType<typeof drizzle>;
 
@@ -20,7 +20,7 @@ export function initDatabase(connection: {
 
 export function getDb() {
   if (!db) {
-    throw new Error("Database not initialized");
+    throw new Error('Database not initialized');
   }
   return db;
 }

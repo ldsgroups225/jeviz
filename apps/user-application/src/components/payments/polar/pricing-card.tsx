@@ -1,21 +1,21 @@
+import type { Price, Product, Subscription } from './types';
+import { Check } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
-import { Price, Product, Subscription } from "./types";
+} from '@/components/ui/card';
 
-interface PricingCardProps {
+type PricingCardProps = {
   product: Product;
   subscription: Subscription;
   onCheckout: (productId: string) => void;
   isCheckoutPending: boolean;
-}
+};
 
 export function PricingCard({
   product,
@@ -27,24 +27,24 @@ export function PricingCard({
 
   const formatPrice = (price: Price) => {
     if (!price) {
-      return "Price unavailable";
+      return 'Price unavailable';
     }
-    if (price.type !== "recurring") {
-      return "Currency not specified";
+    if (price.type !== 'recurring') {
+      return 'Currency not specified';
     }
 
-    if (price.amountType === "fixed" && price.priceAmount) {
-      return new Intl.NumberFormat("en-US", {
-        style: "currency",
+    if (price.amountType === 'fixed' && price.priceAmount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: price.priceCurrency.toUpperCase(),
       }).format(price.priceAmount / 100);
     }
 
-    if (price.amountType === "custom") {
+    if (price.amountType === 'custom') {
       const min = price.minimumAmount ? price.minimumAmount / 100 : 0;
       const max = price.maximumAmount ? price.maximumAmount / 100 : null;
-      const formatter = new Intl.NumberFormat("en-US", {
-        style: "currency",
+      const formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: price.priceCurrency.toUpperCase(),
       });
 
@@ -54,12 +54,12 @@ export function PricingCard({
       return `From ${formatter.format(min)}`;
     }
 
-    return "Custom pricing";
+    return 'Custom pricing';
   };
 
   const getFeatures = (metadata: Record<string, any>) => {
     return Object.entries(metadata)
-      .filter(([key]) => key.includes("feature"))
+      .filter(([key]) => key.includes('feature'))
       .map(([_, value]) => value);
   };
 
@@ -75,7 +75,9 @@ export function PricingCard({
                 Current Plan
               </Badge>
               <p className="text-sm text-muted-foreground">
-                Status: {subscription.status}
+                Status:
+                {' '}
+                {subscription.status}
               </p>
             </div>
             <Button asChild className="w-full" size="lg" variant="outline">
@@ -83,7 +85,8 @@ export function PricingCard({
             </Button>
           </div>
         );
-      } else {
+      }
+      else {
         return (
           <div className="text-center">
             <p className="text-sm text-muted-foreground mb-4">
@@ -126,9 +129,11 @@ export function PricingCard({
       <CardContent>
         <div className="mb-6">
           <div className="text-3xl font-bold">{formatPrice(price)}</div>
-          {price.type === "recurring" && (
+          {price.type === 'recurring' && (
             <div className="text-sm text-muted-foreground">
-              per {price.recurringInterval}
+              per
+              {' '}
+              {price.recurringInterval}
             </div>
           )}
         </div>

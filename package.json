@@ -8,14 +8,25 @@
     "dev:user-application": "pnpm run --filter user-application dev",
     "deploy:user-application": "pnpm run build:data-ops && pnpm run --filter user-application deploy",
     "dev:data-service": "pnpm run --filter data-service dev",
-    "deploy:data-service": "pnpm run build:data-ops && pnpm run --filter data-service deploy"
+    "deploy:data-service": "pnpm run build:data-ops && pnpm run --filter data-service deploy",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:apps": "eslint apps/",
+    "lint:packages": "eslint packages/",
+    "lint:fix:apps": "eslint apps/ --fix",
+    "lint:fix:packages": "eslint packages/ --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.18.0",
   "devDependencies": {
+    "@antfu/eslint-config": "^5.4.1",
+    "@eslint-react/eslint-plugin": "^2.0.6",
     "@types/node": "^22.17.2",
+    "eslint": "^9.37.0",
+    "eslint-plugin-react-hooks": "^6.1.1",
+    "eslint-plugin-react-refresh": "^0.4.23",
     "typescript": "^5.9.2"
   }
 }
