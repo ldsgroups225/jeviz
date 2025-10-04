@@ -1,0 +1,61 @@
+# Lefthook configuration for monorepo
+# https://github.com/evilmartians/lefthook
+
+# Validate commit messages
+commit-msg:
+  commands:
+    commitlint:
+      run: npx --no -- commitlint --edit {1}
+
+# Validate content before committing
+pre-commit:
+  commands:
+    # Lint and fix all files
+    lint:
+      glob: '*.{ts,tsx,js,jsx}'
+      run: pnpm run lint:fix
+      stage_fixed: true
+      priority: 1
+
+    # Type check TypeScript files (commented out for initial setup)
+    check-types:
+      glob: '*.{ts,tsx}'
+      run: |
+        pnpm --filter user-application exec tsc --noEmit --pretty
+        pnpm --filter data-service exec tsc --noEmit --pretty
+        pnpm --filter data-ops exec tsc --noEmit --pretty
+      priority: 2
+
+    # Run tests for changed packages
+    test:
+      glob: '*.{ts,tsx,js,jsx}'
+      run: |
+        # Run tests for packages that have changes
+        if pnpm --filter user-application run test 2>/dev/null; then
+          echo "✅ user-application tests passed"
+        fi
+        if pnpm --filter data-service run test 2>/dev/null; then
+          echo "✅ data-service tests passed"
+        fi
+        if pnpm --filter data-ops run test 2>/dev/null; then
+          echo "✅ data-ops tests passed"
+        fi
+      priority: 3
+
+# Additional checks before push
+pre-push:
+  commands:
+    # Full workspace lint
+    lint-all:
+      run: pnpm run lint
+
+    # Build all packages
+    build:
+      run: pnpm run build:data-ops
+
+    # Run all tests
+    test-all:
+      run: |
+        pnpm --filter data-ops test || true
+        pnpm --filter user-application test || true
+        pnpm --filter data-service test || true

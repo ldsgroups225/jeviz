@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [22.x, 24.x]
+
+    name: Build with ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build data-ops
+        run: pnpm run build:data-ops
+
+      - name: Build user-application
+        run: pnpm run --filter user-application build
+        if: success()
+
+      - name: Build data-service
+        run: pnpm run --filter data-service build
+        if: success()
+
+  static:
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    name: Run static checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Validate commit messages
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
+
+      - name: Lint all packages
+        run: pnpm run lint
+
+      - name: Lint apps
+        run: pnpm run lint:apps
+
+      - name: Lint packages
+        run: pnpm run lint:packages
+
+      - name: Check TypeScript types
+        run: |
+          pnpm --filter user-application exec tsc --noEmit --pretty
+          pnpm --filter data-service exec tsc --noEmit --pretty
+          pnpm --filter data-ops exec tsc --noEmit --pretty
+
+  test:
+    strategy:
+      matrix:
+        node-version: [22.x]
+
+    name: Run tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [build]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: ./.github/actions/setup-project
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests for data-ops
+        run: pnpm --filter data-ops test
+        if: success()
+
+      - name: Run tests for user-application
+        run: pnpm --filter user-application test
+        if: success()
+
+      - name: Run tests for data-service
+        run: pnpm --filter data-service test
+        if: success()
+
+      - name: Upload coverage reports
+        if: success()
+        uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

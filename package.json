@@ -14,7 +14,11 @@
     "lint:apps": "eslint apps/",
     "lint:packages": "eslint packages/",
     "lint:fix:apps": "eslint apps/ --fix",
-    "lint:fix:packages": "eslint packages/ --fix"
+    "lint:fix:packages": "eslint packages/ --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ui": "vitest --ui"
   },
   "keywords": [],
   "author": "",
@@ -22,11 +26,16 @@
   "packageManager": "pnpm@10.18.0",
   "devDependencies": {
     "@antfu/eslint-config": "^5.4.1",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "@eslint-react/eslint-plugin": "^2.0.6",
     "@types/node": "^22.17.2",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.37.0",
     "eslint-plugin-react-hooks": "^6.1.1",
     "eslint-plugin-react-refresh": "^0.4.23",
-    "typescript": "^5.9.2"
+    "lefthook": "^1.13.6",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
   }
 }
