@@ -137,11 +137,11 @@ function ModeSelection() {
                   className="w-full"
                   disabled={mode.disabled}
                   onClick={() => {
-                    // For now, just show a message since we haven't implemented these routes yet
-                    alert(`Mode ${mode.type} sera bientôt disponible!`);
+                    // For now, just log a message since we haven't implemented these routes yet
+                    console.log(`Mode ${mode.type} sera bientôt disponible!`);
                   }}
                 >
-                  {mode.disabled ? 'Contenu indisponible' : 'Commencer'}
+                  {mode.disabled ? 'Contenu indisponible' : 'Bientôt disponible'}
                 </Button>
               </CardContent>
             </Card>
