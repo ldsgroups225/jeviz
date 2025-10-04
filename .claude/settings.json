@@ -1,0 +1,11 @@
+{
+  "hooks": [
+    {
+      "name": "auto-lint-fix",
+      "type": "PostToolUse",
+      "script": "./.claude/hooks/auto-lint-fix.mjs",
+      "toolMatcher": ["Write", "Edit"],
+      "scope": "project-local"
+    }
+  ]
+}

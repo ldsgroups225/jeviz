@@ -10,8 +10,12 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as StaticRouteRouteImport } from './routes/_static/route'
+import { Route as OnboardingRouteRouteImport } from './routes/_onboarding/route'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingSeriesRouteImport } from './routes/_onboarding/series'
+import { Route as OnboardingGradeRouteImport } from './routes/_onboarding/grade'
+import { Route as OnboardingCompleteRouteImport } from './routes/_onboarding/complete'
 import { Route as StaticDocsIndexRouteImport } from './routes/_static/docs/index'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
@@ -24,6 +28,10 @@ const StaticRouteRoute = StaticRouteRouteImport.update({
   id: '/_static',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
+  id: '/_onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
@@ -32,6 +40,21 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingSeriesRoute = OnboardingSeriesRouteImport.update({
+  id: '/series',
+  path: '/series',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingGradeRoute = OnboardingGradeRouteImport.update({
+  id: '/grade',
+  path: '/grade',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingCompleteRoute = OnboardingCompleteRouteImport.update({
+  id: '/complete',
+  path: '/complete',
+  getParentRoute: () => OnboardingRouteRoute,
 } as any)
 const StaticDocsIndexRoute = StaticDocsIndexRouteImport.update({
   id: '/docs/',
@@ -73,6 +96,9 @@ const AuthAppPolarCheckoutSuccessRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/complete': typeof OnboardingCompleteRoute
+  '/grade': typeof OnboardingGradeRoute
+  '/series': typeof OnboardingSeriesRoute
   '/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
@@ -83,6 +109,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/complete': typeof OnboardingCompleteRoute
+  '/grade': typeof OnboardingGradeRoute
+  '/series': typeof OnboardingSeriesRoute
   '/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/app': typeof AuthAppIndexRoute
@@ -95,7 +124,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/_onboarding': typeof OnboardingRouteRouteWithChildren
   '/_static': typeof StaticRouteRouteWithChildren
+  '/_onboarding/complete': typeof OnboardingCompleteRoute
+  '/_onboarding/grade': typeof OnboardingGradeRoute
+  '/_onboarding/series': typeof OnboardingSeriesRoute
   '/_static/docs/$name': typeof StaticDocsNameRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/_auth/app/': typeof AuthAppIndexRoute
@@ -108,6 +141,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/complete'
+    | '/grade'
+    | '/series'
     | '/docs/$name'
     | '/api/auth/$'
     | '/app'
@@ -118,6 +154,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/complete'
+    | '/grade'
+    | '/series'
     | '/docs/$name'
     | '/api/auth/$'
     | '/app'
@@ -129,7 +168,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/_onboarding'
     | '/_static'
+    | '/_onboarding/complete'
+    | '/_onboarding/grade'
+    | '/_onboarding/series'
     | '/_static/docs/$name'
     | '/api/auth/$'
     | '/_auth/app/'
@@ -142,6 +185,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren
   StaticRouteRoute: typeof StaticRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -153,6 +197,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof StaticRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_onboarding': {
+      id: '/_onboarding'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof OnboardingRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth': {
@@ -168,6 +219,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_onboarding/series': {
+      id: '/_onboarding/series'
+      path: '/series'
+      fullPath: '/series'
+      preLoaderRoute: typeof OnboardingSeriesRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/_onboarding/grade': {
+      id: '/_onboarding/grade'
+      path: '/grade'
+      fullPath: '/grade'
+      preLoaderRoute: typeof OnboardingGradeRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/_onboarding/complete': {
+      id: '/_onboarding/complete'
+      path: '/complete'
+      fullPath: '/complete'
+      preLoaderRoute: typeof OnboardingCompleteRouteImport
+      parentRoute: typeof OnboardingRouteRoute
     }
     '/_static/docs/': {
       id: '/_static/docs/'
@@ -239,6 +311,22 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
   AuthRouteRouteChildren,
 )
 
+interface OnboardingRouteRouteChildren {
+  OnboardingCompleteRoute: typeof OnboardingCompleteRoute
+  OnboardingGradeRoute: typeof OnboardingGradeRoute
+  OnboardingSeriesRoute: typeof OnboardingSeriesRoute
+}
+
+const OnboardingRouteRouteChildren: OnboardingRouteRouteChildren = {
+  OnboardingCompleteRoute: OnboardingCompleteRoute,
+  OnboardingGradeRoute: OnboardingGradeRoute,
+  OnboardingSeriesRoute: OnboardingSeriesRoute,
+}
+
+const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
+  OnboardingRouteRouteChildren,
+)
+
 interface StaticRouteRouteChildren {
   StaticDocsNameRoute: typeof StaticDocsNameRoute
   StaticDocsIndexRoute: typeof StaticDocsIndexRoute
@@ -256,6 +344,7 @@ const StaticRouteRouteWithChildren = StaticRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  OnboardingRouteRoute: OnboardingRouteRouteWithChildren,
   StaticRouteRoute: StaticRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }

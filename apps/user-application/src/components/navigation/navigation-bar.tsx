@@ -63,16 +63,6 @@ export function NavigationBar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const _handleSmoothScroll = (elementId: string) => {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
-
   const handleNavClick = (_item: NavigationItem) => {
     setIsOpen(false);
   };

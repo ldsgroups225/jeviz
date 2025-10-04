@@ -1,2 +1,1 @@
-// Database relations
-import type { } from './schema';
+import { } from './schema';

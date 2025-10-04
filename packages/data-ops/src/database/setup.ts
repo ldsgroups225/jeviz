@@ -2,13 +2,16 @@
 import { neon } from '@neondatabase/serverless';
 import { drizzle } from 'drizzle-orm/neon-http';
 
-let db: ReturnType<typeof drizzle>;
+// Type exports
+export type Database = ReturnType<typeof drizzle>;
+
+let db: Database;
 
 export function initDatabase(connection: {
   host: string;
   username: string;
   password: string;
-}) {
+}): Database {
   if (db) {
     return db;
   }
@@ -18,7 +21,7 @@ export function initDatabase(connection: {
   return db;
 }
 
-export function getDb() {
+export function getDb(): Database {
   if (!db) {
     throw new Error('Database not initialized');
   }

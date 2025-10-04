@@ -9,6 +9,7 @@ export const Route = createFileRoute('/_auth/app/polar/portal')({
     handlers: {
       GET: async (ctx) => {
         const polar = new Polar({
+          // @ts-expect-error - env.POLAR_SECRET type not properly inferred from Cloudflare env
           accessToken: env.POLAR_SECRET,
           server: 'sandbox',
         });
