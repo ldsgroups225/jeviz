@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { BookOpen, Brain, Clock, Flame, Target, TrendingUp } from 'lucide-react';
@@ -219,48 +219,50 @@ function LearnDashboard() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.subjects.map(subject => (
-            <Card key={subject.id} className="hover:shadow-lg transition-all">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg">
-                    {subject.name}
-                  </CardTitle>
-                  <Badge variant="outline">
-                    Coef.
-                    {subject.coefficient}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-muted-foreground">Maîtrise</span>
-                      <span className="font-semibold">
-                        {subject.masteryPercentage}
-                        %
+            <Link key={subject.id} to="/learn/subject/$subjectId" params={{ subjectId: subject.id.toString() }}>
+              <Card className="hover:shadow-lg transition-all cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">
+                      {subject.name}
+                    </CardTitle>
+                    <Badge variant="outline">
+                      Coef.
+                      {subject.coefficient}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div>
+                      <div className="flex justify-between text-sm mb-1">
+                        <span className="text-muted-foreground">Maîtrise</span>
+                        <span className="font-semibold">
+                          {subject.masteryPercentage}
+                          %
+                        </span>
+                      </div>
+                      <Progress value={subject.masteryPercentage} className="h-2" />
+                    </div>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>
+                        {subject.chaptersCompleted}
+                        {' '}
+                        /
+                        {' '}
+                        {subject.totalChapters}
+                        {' '}
+                        chapitres
+                      </span>
+                      <span>
+                        {Math.floor(subject.totalStudyTime / 60)}
+                        h total
                       </span>
                     </div>
-                    <Progress value={subject.masteryPercentage} className="h-2" />
                   </div>
-                  <div className="flex justify-between text-sm text-muted-foreground">
-                    <span>
-                      {subject.chaptersCompleted}
-                      {' '}
-                      /
-                      {' '}
-                      {subject.totalChapters}
-                      {' '}
-                      chapitres
-                    </span>
-                    <span>
-                      {Math.floor(subject.totalStudyTime / 60)}
-                      h total
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

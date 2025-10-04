@@ -21,9 +21,11 @@ import { Route as AuthLearnIndexRouteImport } from './routes/_auth/learn/index'
 import { Route as AuthAppIndexRouteImport } from './routes/_auth/app/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth.$'
 import { Route as StaticDocsNameRouteImport } from './routes/_static/docs/$name'
+import { Route as AuthLearnSubjectSubjectIdRouteImport } from './routes/_auth/learn/subject/$subjectId'
 import { Route as AuthAppPolarSubscriptionsRouteImport } from './routes/_auth/app/polar/subscriptions'
 import { Route as AuthAppPolarPortalRouteImport } from './routes/_auth/app/polar/portal'
 import { Route as AuthAppPolarCheckoutSuccessRouteImport } from './routes/_auth/app/polar/checkout.success'
+import { Route as AuthLearnStudySubjectIdChapterIdModeRouteImport } from './routes/_auth/learn/study/$subjectId/$chapterId/mode'
 
 const StaticRouteRoute = StaticRouteRouteImport.update({
   id: '/_static',
@@ -82,6 +84,12 @@ const StaticDocsNameRoute = StaticDocsNameRouteImport.update({
   path: '/docs/$name',
   getParentRoute: () => StaticRouteRoute,
 } as any)
+const AuthLearnSubjectSubjectIdRoute =
+  AuthLearnSubjectSubjectIdRouteImport.update({
+    id: '/learn/subject/$subjectId',
+    path: '/learn/subject/$subjectId',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 const AuthAppPolarSubscriptionsRoute =
   AuthAppPolarSubscriptionsRouteImport.update({
     id: '/app/polar/subscriptions',
@@ -99,6 +107,12 @@ const AuthAppPolarCheckoutSuccessRoute =
     path: '/app/polar/checkout/success',
     getParentRoute: () => AuthRouteRoute,
   } as any)
+const AuthLearnStudySubjectIdChapterIdModeRoute =
+  AuthLearnStudySubjectIdChapterIdModeRouteImport.update({
+    id: '/learn/study/$subjectId/$chapterId/mode',
+    path: '/learn/study/$subjectId/$chapterId/mode',
+    getParentRoute: () => AuthRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -112,7 +126,9 @@ export interface FileRoutesByFullPath {
   '/docs': typeof StaticDocsIndexRoute
   '/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
+  '/learn/subject/$subjectId': typeof AuthLearnSubjectSubjectIdRoute
   '/app/polar/checkout/success': typeof AuthAppPolarCheckoutSuccessRoute
+  '/learn/study/$subjectId/$chapterId/mode': typeof AuthLearnStudySubjectIdChapterIdModeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,7 +142,9 @@ export interface FileRoutesByTo {
   '/docs': typeof StaticDocsIndexRoute
   '/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
+  '/learn/subject/$subjectId': typeof AuthLearnSubjectSubjectIdRoute
   '/app/polar/checkout/success': typeof AuthAppPolarCheckoutSuccessRoute
+  '/learn/study/$subjectId/$chapterId/mode': typeof AuthLearnStudySubjectIdChapterIdModeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -144,7 +162,9 @@ export interface FileRoutesById {
   '/_static/docs/': typeof StaticDocsIndexRoute
   '/_auth/app/polar/portal': typeof AuthAppPolarPortalRoute
   '/_auth/app/polar/subscriptions': typeof AuthAppPolarSubscriptionsRoute
+  '/_auth/learn/subject/$subjectId': typeof AuthLearnSubjectSubjectIdRoute
   '/_auth/app/polar/checkout/success': typeof AuthAppPolarCheckoutSuccessRoute
+  '/_auth/learn/study/$subjectId/$chapterId/mode': typeof AuthLearnStudySubjectIdChapterIdModeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,7 +180,9 @@ export interface FileRouteTypes {
     | '/docs'
     | '/app/polar/portal'
     | '/app/polar/subscriptions'
+    | '/learn/subject/$subjectId'
     | '/app/polar/checkout/success'
+    | '/learn/study/$subjectId/$chapterId/mode'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -174,7 +196,9 @@ export interface FileRouteTypes {
     | '/docs'
     | '/app/polar/portal'
     | '/app/polar/subscriptions'
+    | '/learn/subject/$subjectId'
     | '/app/polar/checkout/success'
+    | '/learn/study/$subjectId/$chapterId/mode'
   id:
     | '__root__'
     | '/'
@@ -191,7 +215,9 @@ export interface FileRouteTypes {
     | '/_static/docs/'
     | '/_auth/app/polar/portal'
     | '/_auth/app/polar/subscriptions'
+    | '/_auth/learn/subject/$subjectId'
     | '/_auth/app/polar/checkout/success'
+    | '/_auth/learn/study/$subjectId/$chapterId/mode'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -288,6 +314,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StaticDocsNameRouteImport
       parentRoute: typeof StaticRouteRoute
     }
+    '/_auth/learn/subject/$subjectId': {
+      id: '/_auth/learn/subject/$subjectId'
+      path: '/learn/subject/$subjectId'
+      fullPath: '/learn/subject/$subjectId'
+      preLoaderRoute: typeof AuthLearnSubjectSubjectIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/app/polar/subscriptions': {
       id: '/_auth/app/polar/subscriptions'
       path: '/app/polar/subscriptions'
@@ -309,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthAppPolarCheckoutSuccessRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/learn/study/$subjectId/$chapterId/mode': {
+      id: '/_auth/learn/study/$subjectId/$chapterId/mode'
+      path: '/learn/study/$subjectId/$chapterId/mode'
+      fullPath: '/learn/study/$subjectId/$chapterId/mode'
+      preLoaderRoute: typeof AuthLearnStudySubjectIdChapterIdModeRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
   }
 }
 
@@ -317,7 +357,9 @@ interface AuthRouteRouteChildren {
   AuthLearnIndexRoute: typeof AuthLearnIndexRoute
   AuthAppPolarPortalRoute: typeof AuthAppPolarPortalRoute
   AuthAppPolarSubscriptionsRoute: typeof AuthAppPolarSubscriptionsRoute
+  AuthLearnSubjectSubjectIdRoute: typeof AuthLearnSubjectSubjectIdRoute
   AuthAppPolarCheckoutSuccessRoute: typeof AuthAppPolarCheckoutSuccessRoute
+  AuthLearnStudySubjectIdChapterIdModeRoute: typeof AuthLearnStudySubjectIdChapterIdModeRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
@@ -325,7 +367,10 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLearnIndexRoute: AuthLearnIndexRoute,
   AuthAppPolarPortalRoute: AuthAppPolarPortalRoute,
   AuthAppPolarSubscriptionsRoute: AuthAppPolarSubscriptionsRoute,
+  AuthLearnSubjectSubjectIdRoute: AuthLearnSubjectSubjectIdRoute,
   AuthAppPolarCheckoutSuccessRoute: AuthAppPolarCheckoutSuccessRoute,
+  AuthLearnStudySubjectIdChapterIdModeRoute:
+    AuthLearnStudySubjectIdChapterIdModeRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(

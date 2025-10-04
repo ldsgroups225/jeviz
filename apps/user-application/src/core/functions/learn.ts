@@ -5,10 +5,17 @@ import {
   subjects,
   userProfiles,
   userProgress,
+  flashcards,
+  userFlashcardProgress,
 } from '@repo/data-ops/drizzle/schema';
+import {
+  quizAttempts,
+  quizQuestions,
+} from '@repo/data-ops/drizzle/quizzes-schema';
 import { createServerFn } from '@tanstack/react-start';
 import { and, avg, count, desc, eq, sql } from 'drizzle-orm';
 import { protectedFunctionMiddleware } from '@/core/middleware/auth';
+import { z } from 'zod';
 
 export const getDashboard = createServerFn()
   .middleware([protectedFunctionMiddleware])
@@ -194,3 +201,218 @@ function calculateReadinessScore(subjects: any[]): number {
 
   return Math.round(weightedScore / totalWeight);
 }
+
+const SubjectIdSchema = z.object({
+  subjectId: z.number().int().positive(),
+});
+
+const ChapterIdSchema = z.object({
+  chapterId: z.number().int().positive(),
+});
+
+export const getSubjectDetail = createServerFn()
+  .middleware([protectedFunctionMiddleware])
+  .inputValidator((data: z.infer<typeof SubjectIdSchema>) => SubjectIdSchema.parse(data))
+  .handler(async (ctx) => {
+    const db = getDb();
+    const userId = ctx.context.userId;
+    const { subjectId } = ctx.data;
+
+    // Get subject info
+    const [subject] = await db.select()
+      .from(subjects)
+      .where(eq(subjects.id, subjectId))
+      .limit(1);
+
+    if (!subject) {
+      throw new Error('Subject not found');
+    }
+
+    // Get chapters with progress
+    const chaptersWithProgress = await db.select({
+      id: chapters.id,
+      title: chapters.title,
+      order: chapters.order,
+      difficulty: chapters.difficulty,
+      estimatedHours: chapters.estimatedHours,
+      description: chapters.description,
+      masteryPercentage: userProgress.masteryPercentage,
+      chaptersCompleted: userProgress.isCompleted,
+      lastStudied: userProgress.lastStudied,
+      timeSpentMinutes: userProgress.timeSpentMinutes,
+      flashcardCount: sql<number>`(
+        select count(*) from ${flashcards}
+        where ${flashcards.chapterId} = ${chapters.id}
+      )`,
+      quizQuestionCount: sql<number>`(
+        select count(*) from ${quizQuestions}
+        where ${quizQuestions.chapterId} = ${chapters.id}
+      )`,
+    })
+      .from(chapters)
+      .leftJoin(
+        userProgress,
+        and(
+          eq(userProgress.chapterId, chapters.id),
+          eq(userProgress.userId, userId)
+        )
+      )
+      .where(eq(chapters.subjectId, subjectId))
+      .orderBy(chapters.order);
+
+    // Calculate overall stats
+    const totalChapters = chaptersWithProgress.length;
+    const completedChapters = chaptersWithProgress.filter(c => c.chaptersCompleted).length;
+    const avgMastery = totalChapters > 0
+      ? chaptersWithProgress.reduce((sum, c) => sum + (Number(c.masteryPercentage) || 0), 0) / totalChapters
+      : 0;
+    const totalEstimatedHours = chaptersWithProgress.reduce((sum, c) =>
+      sum + parseFloat(c.estimatedHours?.toString() || '0'), 0);
+    const lastStudied = chaptersWithProgress
+      .filter(c => c.lastStudied)
+      .sort((a, b) => b.lastStudied!.getTime() - a.lastStudied!.getTime())[0]?.lastStudied;
+
+    // Get recent quiz scores for performance chart
+    const recentQuizzes = await db.select({
+      score: quizAttempts.score,
+      completedAt: quizAttempts.completedAt,
+    })
+      .from(quizAttempts)
+      .innerJoin(chapters, eq(chapters.id, quizAttempts.chapterId))
+      .where(
+        and(
+          eq(chapters.subjectId, subjectId),
+          eq(quizAttempts.userId, userId),
+          sql`${quizAttempts.completedAt} is not null`
+        )
+      )
+      .orderBy(desc(quizAttempts.completedAt))
+      .limit(5);
+
+    return {
+      id: subject.id,
+      name: subject.name,
+      shortName: subject.shortName,
+      coefficient: subject.coefficient,
+      totalChapters,
+      completedChapters,
+      masteryPercentage: Math.round(avgMastery),
+      estimatedHoursRemaining: Math.round(totalEstimatedHours * (1 - avgMastery / 100)),
+      lastStudied,
+      chapters: chaptersWithProgress.map(c => ({
+        id: c.id,
+        title: c.title,
+        order: c.order,
+        difficulty: c.difficulty,
+        estimatedHours: parseFloat(c.estimatedHours?.toString() || '0'),
+        description: c.description,
+        flashcardCount: c.flashcardCount,
+        quizQuestionCount: c.quizQuestionCount,
+        isCompleted: c.chaptersCompleted || false,
+        masteryPercentage: Math.round(Number(c.masteryPercentage) || 0),
+        lastStudied: c.lastStudied,
+        isStarted: (Number(c.masteryPercentage) || 0) > 0 || c.lastStudied !== null,
+      })),
+      recentQuizScores: recentQuizzes.map(q => Number(q.score) || 0),
+    };
+  });
+
+export const getChapterModes = createServerFn()
+  .middleware([protectedFunctionMiddleware])
+  .inputValidator((data: z.infer<typeof ChapterIdSchema>) => ChapterIdSchema.parse(data))
+  .handler(async (ctx) => {
+    const db = getDb();
+    const userId = ctx.context.userId;
+    const { chapterId } = ctx.data;
+
+    // Get chapter info
+    const [chapter] = await db.select({
+      id: chapters.id,
+      title: chapters.title,
+      subjectName: subjects.name,
+      subjectId: subjects.id,
+    })
+      .from(chapters)
+      .innerJoin(subjects, eq(subjects.id, chapters.subjectId))
+      .where(eq(chapters.id, chapterId))
+      .limit(1);
+
+    if (!chapter) {
+      throw new Error('Chapter not found');
+    }
+
+    // Get flashcard stats
+    const [flashcardStats] = await db.select({
+      total: sql<number>`count(*)`,
+      mastered: sql<number>`count(case when ${userFlashcardProgress.repetitions} >= 3 then 1 end)`,
+      review: sql<number>`count(case when ${userFlashcardProgress.nextReviewDate} <= now() then 1 end)`,
+    })
+      .from(flashcards)
+      .leftJoin(
+        userFlashcardProgress,
+        and(
+          eq(userFlashcardProgress.flashcardId, flashcards.id),
+          eq(userFlashcardProgress.userId, userId)
+        )
+      )
+      .where(eq(flashcards.chapterId, chapterId));
+
+    const newCards = flashcardStats.total - flashcardStats.mastered - flashcardStats.review;
+
+    // Get quiz stats
+    const [quizStats] = await db.select({
+      totalQuestions: sql<number>`count(*)`,
+    })
+      .from(quizQuestions)
+      .where(eq(quizQuestions.chapterId, chapterId));
+
+    const [attemptStats] = await db.select({
+      attempts: sql<number>`count(distinct ${quizAttempts.id})`,
+      avgScore: sql<number>`avg(${quizAttempts.score})`,
+      lastAttempt: sql<Date>`max(${quizAttempts.completedAt})`,
+    })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.chapterId, chapterId),
+          eq(quizAttempts.userId, userId),
+          sql`${quizAttempts.completedAt} is not null`
+        )
+      );
+
+    const attemptedQuestions = await db.select({
+      count: sql<number>`count(distinct ${quizAttempts.userId})`,
+    })
+      .from(quizAttempts)
+      .innerJoin(quizQuestions, eq(quizQuestions.id, quizAttempts.id))
+      .where(
+        and(
+          eq(quizAttempts.chapterId, chapterId),
+          eq(quizAttempts.userId, userId)
+        )
+      );
+
+    return {
+      chapter: {
+        id: chapter.id,
+        title: chapter.title,
+        subjectName: chapter.subjectName,
+        subjectId: chapter.subjectId,
+      },
+      flashcardStats: {
+        total: flashcardStats.total,
+        newCards,
+        reviewCards: flashcardStats.review,
+        masteredCards: flashcardStats.mastered,
+        estimatedMinutes: Math.ceil(flashcardStats.total / 10), // ~6 cards per minute
+      },
+      quizStats: {
+        totalQuestions: quizStats.totalQuestions,
+        attemptedQuestions: attemptedQuestions[0]?.count || 0,
+        attempts: attemptStats?.attempts || 0,
+        averageScore: attemptStats?.avgScore ? Math.round(Number(attemptStats.avgScore)) : null,
+        lastAttemptDate: attemptStats?.lastAttempt || null,
+        estimatedMinutes: Math.ceil(quizStats.totalQuestions * 1.5), // ~40 seconds per question
+      },
+    };
+  });
