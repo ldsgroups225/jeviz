@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
 import { useSuspenseQuery } from '@tanstack/react-query';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { formatDistanceToNow } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import {
   ArrowLeft,
   BookOpen,
@@ -8,23 +10,21 @@ import {
   Clock,
   Flame,
   TrendingUp,
-  Zap
+  Zap,
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { getSubjectDetail } from '@/core/functions/learn';
-import { formatDistanceToNow } from 'date-fns';
-import { fr } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 
 export const Route = createFileRoute('/_auth/learn/subject/$subjectId')({
   component: SubjectDetail,
   loader: async ({ context, params }) => {
     await context.queryClient.prefetchQuery({
-      queryKey: ['subject', parseInt(params.subjectId)],
-      queryFn: () => getSubjectDetail({ data: { subjectId: parseInt(params.subjectId) } }),
+      queryKey: ['subject', Number.parseInt(params.subjectId)],
+      queryFn: () => getSubjectDetail({ data: { subjectId: Number.parseInt(params.subjectId) } }),
     });
   },
 });
@@ -32,8 +32,8 @@ export const Route = createFileRoute('/_auth/learn/subject/$subjectId')({
 function SubjectDetail() {
   const { subjectId } = Route.useParams();
   const { data } = useSuspenseQuery({
-    queryKey: ['subject', parseInt(subjectId)],
-    queryFn: () => getSubjectDetail({ data: { subjectId: parseInt(subjectId) } }),
+    queryKey: ['subject', Number.parseInt(subjectId)],
+    queryFn: () => getSubjectDetail({ data: { subjectId: Number.parseInt(subjectId) } }),
   });
 
   const getDifficultyColor = (difficulty: string) => {
@@ -70,10 +70,18 @@ function SubjectDetail() {
         <div>
           <div className="flex items-center gap-3 mb-2">
             <h1 className="text-3xl font-bold">{data.name}</h1>
-            <Badge variant="secondary">Coefficient {data.coefficient}</Badge>
+            <Badge variant="secondary">
+              Coefficient
+              {data.coefficient}
+            </Badge>
           </div>
           <p className="text-muted-foreground">
-            {data.completedChapters} / {data.totalChapters} chapitres complétés
+            {data.completedChapters}
+            {' '}
+            /
+            {data.totalChapters}
+            {' '}
+            chapitres complétés
           </p>
         </div>
       </div>
@@ -115,7 +123,10 @@ function SubjectDetail() {
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-3xl font-bold">{data.masteryPercentage}%</div>
+                    <div className="text-3xl font-bold">
+                      {data.masteryPercentage}
+                      %
+                    </div>
                     <div className="text-xs text-muted-foreground">Maîtrise</div>
                   </div>
                 </div>
@@ -133,7 +144,10 @@ function SubjectDetail() {
                 <div className="text-sm text-muted-foreground">Complétés</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold">{data.estimatedHoursRemaining}h</div>
+                <div className="text-2xl font-bold">
+                  {data.estimatedHoursRemaining}
+                  h
+                </div>
                 <div className="text-sm text-muted-foreground">Restantes</div>
               </div>
             </div>
@@ -141,7 +155,9 @@ function SubjectDetail() {
             {/* Last Studied */}
             {data.lastStudied && (
               <div className="text-center text-sm text-muted-foreground">
-                Dernière étude {formatDistanceToNow(data.lastStudied, { addSuffix: true, locale: fr })}
+                Dernière étude
+                {' '}
+                {formatDistanceToNow(data.lastStudied, { addSuffix: true, locale: fr })}
               </div>
             )}
 
@@ -159,7 +175,10 @@ function SubjectDetail() {
                         className="w-full bg-primary rounded-t"
                         style={{ height: `${score}%` }}
                       />
-                      <span className="text-xs mt-1">{score}%</span>
+                      <span className="text-xs mt-1">
+                        {score}
+                        %
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -208,19 +227,20 @@ function SubjectDetail() {
       <div>
         <h2 className="text-xl font-semibold mb-4">Chapitres</h2>
         <div className="space-y-3">
-          {data.chapters.map((chapter) => (
+          {data.chapters.map(chapter => (
             <Link
               key={chapter.id}
               to="/learn/study/$subjectId/$chapterId/mode"
               params={{
-                subjectId: subjectId,
-                chapterId: chapter.id.toString()
+                subjectId,
+                chapterId: chapter.id.toString(),
               }}
             >
               <Card className={cn(
-                "cursor-pointer hover:shadow-lg transition-all",
-                chapter.isCompleted && "border-green-500/50 bg-green-50/50 dark:bg-green-950/20"
-              )}>
+                'cursor-pointer hover:shadow-lg transition-all',
+                chapter.isCompleted && 'border-green-500/50 bg-green-50/50 dark:bg-green-950/20',
+              )}
+              >
                 <CardContent className="p-4">
                   <div className="flex items-start gap-4">
                     {/* Chapter Icon */}
@@ -232,9 +252,11 @@ function SubjectDetail() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <Badge variant="outline" className="text-xs">
-                          Chapitre {chapter.order}
+                          Chapitre
+                          {' '}
+                          {chapter.order}
                         </Badge>
-                        <Badge className={cn("text-xs", getDifficultyColor(chapter.difficulty))}>
+                        <Badge className={cn('text-xs', getDifficultyColor(chapter.difficulty))}>
                           {chapter.difficulty}
                         </Badge>
                       </div>
@@ -250,15 +272,20 @@ function SubjectDetail() {
                       <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
-                          {chapter.flashcardCount} cartes
+                          {chapter.flashcardCount}
+                          {' '}
+                          cartes
                         </span>
                         <span className="flex items-center gap-1">
                           <Zap className="w-3 h-3" />
-                          {chapter.quizQuestionCount} questions
+                          {chapter.quizQuestionCount}
+                          {' '}
+                          questions
                         </span>
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          {chapter.estimatedHours}h
+                          {chapter.estimatedHours}
+                          h
                         </span>
                       </div>
 
@@ -266,14 +293,19 @@ function SubjectDetail() {
                       <div>
                         <div className="flex justify-between text-xs mb-1">
                           <span className="text-muted-foreground">Maîtrise</span>
-                          <span className="font-semibold">{chapter.masteryPercentage}%</span>
+                          <span className="font-semibold">
+                            {chapter.masteryPercentage}
+                            %
+                          </span>
                         </div>
                         <Progress value={chapter.masteryPercentage} className="h-2" />
                       </div>
 
                       {chapter.lastStudied && (
                         <p className="text-xs text-muted-foreground mt-2">
-                          Étudié {formatDistanceToNow(chapter.lastStudied, { addSuffix: true, locale: fr })}
+                          Étudié
+                          {' '}
+                          {formatDistanceToNow(chapter.lastStudied, { addSuffix: true, locale: fr })}
                         </p>
                       )}
                     </div>

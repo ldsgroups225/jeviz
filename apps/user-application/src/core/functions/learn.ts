@@ -1,21 +1,21 @@
 import { getDb } from '@repo/data-ops/database/setup';
 import {
-  chapters,
-  flashcardSessions,
-  subjects,
-  userProfiles,
-  userProgress,
-  flashcards,
-  userFlashcardProgress,
-} from '@repo/data-ops/drizzle/schema';
-import {
   quizAttempts,
   quizQuestions,
 } from '@repo/data-ops/drizzle/quizzes-schema';
+import {
+  chapters,
+  flashcards,
+  flashcardSessions,
+  subjects,
+  userFlashcardProgress,
+  userProfiles,
+  userProgress,
+} from '@repo/data-ops/drizzle/schema';
 import { createServerFn } from '@tanstack/react-start';
 import { and, avg, count, desc, eq, sql } from 'drizzle-orm';
-import { protectedFunctionMiddleware } from '@/core/middleware/auth';
 import { z } from 'zod';
+import { protectedFunctionMiddleware } from '@/core/middleware/auth';
 
 export const getDashboard = createServerFn()
   .middleware([protectedFunctionMiddleware])
@@ -254,8 +254,8 @@ export const getSubjectDetail = createServerFn()
         userProgress,
         and(
           eq(userProgress.chapterId, chapters.id),
-          eq(userProgress.userId, userId)
-        )
+          eq(userProgress.userId, userId),
+        ),
       )
       .where(eq(chapters.subjectId, subjectId))
       .orderBy(chapters.order);
@@ -267,10 +267,11 @@ export const getSubjectDetail = createServerFn()
       ? chaptersWithProgress.reduce((sum, c) => sum + (Number(c.masteryPercentage) || 0), 0) / totalChapters
       : 0;
     const totalEstimatedHours = chaptersWithProgress.reduce((sum, c) =>
-      sum + parseFloat(c.estimatedHours?.toString() || '0'), 0);
+      sum + Number.parseFloat(c.estimatedHours?.toString() || '0'), 0);
     const lastStudied = chaptersWithProgress
       .filter(c => c.lastStudied)
-      .sort((a, b) => b.lastStudied!.getTime() - a.lastStudied!.getTime())[0]?.lastStudied;
+      .sort((a, b) => b.lastStudied!.getTime() - a.lastStudied!.getTime())[0]
+      ?.lastStudied;
 
     // Get recent quiz scores for performance chart
     const recentQuizzes = await db.select({
@@ -283,8 +284,8 @@ export const getSubjectDetail = createServerFn()
         and(
           eq(chapters.subjectId, subjectId),
           eq(quizAttempts.userId, userId),
-          sql`${quizAttempts.completedAt} is not null`
-        )
+          sql`${quizAttempts.completedAt} is not null`,
+        ),
       )
       .orderBy(desc(quizAttempts.completedAt))
       .limit(5);
@@ -304,7 +305,7 @@ export const getSubjectDetail = createServerFn()
         title: c.title,
         order: c.order,
         difficulty: c.difficulty,
-        estimatedHours: parseFloat(c.estimatedHours?.toString() || '0'),
+        estimatedHours: Number.parseFloat(c.estimatedHours?.toString() || '0'),
         description: c.description,
         flashcardCount: c.flashcardCount,
         quizQuestionCount: c.quizQuestionCount,
@@ -352,8 +353,8 @@ export const getChapterModes = createServerFn()
         userFlashcardProgress,
         and(
           eq(userFlashcardProgress.flashcardId, flashcards.id),
-          eq(userFlashcardProgress.userId, userId)
-        )
+          eq(userFlashcardProgress.userId, userId),
+        ),
       )
       .where(eq(flashcards.chapterId, chapterId));
 
@@ -376,8 +377,8 @@ export const getChapterModes = createServerFn()
         and(
           eq(quizAttempts.chapterId, chapterId),
           eq(quizAttempts.userId, userId),
-          sql`${quizAttempts.completedAt} is not null`
-        )
+          sql`${quizAttempts.completedAt} is not null`,
+        ),
       );
 
     const attemptedQuestions = await db.select({
@@ -388,8 +389,8 @@ export const getChapterModes = createServerFn()
       .where(
         and(
           eq(quizAttempts.chapterId, chapterId),
-          eq(quizAttempts.userId, userId)
-        )
+          eq(quizAttempts.userId, userId),
+        ),
       );
 
     return {

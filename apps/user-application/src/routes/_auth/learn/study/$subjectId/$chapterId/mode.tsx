@@ -1,19 +1,19 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { ArrowLeft, BookOpen, Clock, HelpCircle, Zap } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { getChapterModes } from '@/core/functions/learn';
+import { createFileRoute, Link } from '@tanstack/react-router';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { ArrowLeft, BookOpen, Clock, HelpCircle, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { getChapterModes } from '@/core/functions/learn';
 
 export const Route = createFileRoute('/_auth/learn/study/$subjectId/$chapterId/mode')({
   component: ModeSelection,
   loader: async ({ context, params }) => {
     await context.queryClient.prefetchQuery({
-      queryKey: ['chapter-modes', parseInt(params.chapterId)],
-      queryFn: () => getChapterModes({ data: { chapterId: parseInt(params.chapterId) } }),
+      queryKey: ['chapter-modes', Number.parseInt(params.chapterId)],
+      queryFn: () => getChapterModes({ data: { chapterId: Number.parseInt(params.chapterId) } }),
     });
   },
 });
@@ -21,8 +21,8 @@ export const Route = createFileRoute('/_auth/learn/study/$subjectId/$chapterId/m
 function ModeSelection() {
   const { subjectId, chapterId } = Route.useParams();
   const { data } = useSuspenseQuery({
-    queryKey: ['chapter-modes', parseInt(chapterId)],
-    queryFn: () => getChapterModes({ data: { chapterId: parseInt(chapterId) } }),
+    queryKey: ['chapter-modes', Number.parseInt(chapterId)],
+    queryFn: () => getChapterModes({ data: { chapterId: Number.parseInt(chapterId) } }),
   });
 
   const modes = [
@@ -52,11 +52,13 @@ function ModeSelection() {
         { label: 'Questions', value: `${data.quizStats.totalQuestions}` },
         { label: 'Tentatives', value: `${data.quizStats.attempts}`, highlight: false },
         { label: 'Score moyen', value: data.quizStats.averageScore ? `${data.quizStats.averageScore}%` : 'Pas encore', highlight: false },
-        ...(data.quizStats.lastAttemptDate ? [{
-          label: 'Dernière tentative',
-          value: formatDistanceToNow(data.quizStats.lastAttemptDate, { addSuffix: true, locale: fr }),
-          highlight: false,
-        }] : []),
+        ...(data.quizStats.lastAttemptDate
+          ? [{
+              label: 'Dernière tentative',
+              value: formatDistanceToNow(data.quizStats.lastAttemptDate, { addSuffix: true, locale: fr }),
+              highlight: false,
+            }]
+          : []),
       ],
       estimatedMinutes: data.quizStats.estimatedMinutes,
       route: `/learn/study/${subjectId}/${chapterId}/quiz`,
@@ -111,7 +113,8 @@ function ModeSelection() {
                       <span className="text-muted-foreground">{stat.label}</span>
                       <span className={`font-semibold ${
                         stat.highlight ? 'text-orange-600' : ''
-                      }`}>
+                      }`}
+                      >
                         {stat.value}
                       </span>
                     </div>
@@ -121,7 +124,12 @@ function ModeSelection() {
                 {/* Estimated Time */}
                 <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2 border-t">
                   <Clock className="w-4 h-4" />
-                  <span>~{mode.estimatedMinutes} min</span>
+                  <span>
+                    ~
+                    {mode.estimatedMinutes}
+                    {' '}
+                    min
+                  </span>
                 </div>
 
                 {/* Action Button */}
@@ -167,7 +175,9 @@ function ModeSelection() {
       <Card className="border-blue-200 bg-blue-50 dark:bg-blue-950/20">
         <CardContent className="p-4">
           <p className="text-sm text-blue-800 dark:text-blue-200">
-            <strong>💡 Conseil:</strong> Utilise les flashcards pour mémoriser, puis teste-toi avec le quiz pour vérifier ta compréhension.
+            <strong>💡 Conseil:</strong>
+            {' '}
+            Utilise les flashcards pour mémoriser, puis teste-toi avec le quiz pour vérifier ta compréhension.
           </p>
         </CardContent>
       </Card>
